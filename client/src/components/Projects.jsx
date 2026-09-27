@@ -1,5 +1,5 @@
 import { ArrowUpRight } from './icons.jsx';
-import { projects, projectFlows, identity } from '../data/content.js';
+import { projects, projectFlows } from '../data/content.js';
 import { SectionHeading } from './SectionHeading.jsx';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
 import { ProjectFlow } from './ProjectFlow.jsx';
@@ -65,15 +65,40 @@ export function Projects() {
                     citation={flow.citation}
                   />
 
-                  <a
-                    href={identity.github}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="mt-auto inline-flex w-fit items-center gap-1.5 pt-7 text-sm font-semibold text-accent transition-colors hover:text-primary"
-                  >
-                    More on GitHub
-                    <ArrowUpRight size={15} weight="bold" />
-                  </a>
+                  {p.links?.length ? (
+                    <div className="mt-7 flex flex-wrap items-center gap-3">
+                      {p.links.map((link) => (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          {...(link.external
+                            ? { target: '_blank', rel: 'noreferrer noopener' }
+                            : {})}
+                          data-testid={`project-link-${p.id}-${link.label
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, '-')}`}
+                          className={
+                            link.primary
+                              ? 'inline-flex items-center gap-2 rounded-pill bg-accent px-5 py-2.5 text-sm font-bold text-ink transition-transform duration-200 hover:brightness-110 active:translate-y-[1px]'
+                              : 'inline-flex items-center gap-2 rounded-pill border border-line-strong px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-200 hover:border-accent-40 hover:bg-accent-12 active:translate-y-[1px]'
+                          }
+                        >
+                          {link.label}
+                          {link.primary ? (
+                            <ArrowDown size={15} weight="bold" />
+                          ) : (
+                            <ArrowUpRight size={15} weight="bold" />
+                          )}
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {p.note ? (
+                    <p className="mt-4 font-mono text-[11px] leading-relaxed text-muted">
+                      {p.note}
+                    </p>
+                  ) : null}
                 </article>
               </RevealItem>
             );

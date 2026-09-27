@@ -156,9 +156,15 @@ export const projects = {
     {
       id: 'android-blood-bank',
       title: 'Android Blood Bank Management App',
-      kicker: 'Key academic project',
-      body: 'A native Android application for real time blood inventory tracking. It matches donors to requests, alerts nearby donors by location, and keeps donors and blood banks talking in one place.',
-      stack: ['Android Studio', 'Java', 'Firebase', 'Google Maps API', 'XML UI', 'SQLite'],
+      kicker: 'Native Android',
+      body: 'A native Android application for blood bank stock and donor matching. Register donors with their blood group, raise a request for units from a hospital, and the app returns compatible donors ranked by distance with one tap to call.',
+      stack: ['Android Studio', 'Java', 'XML UI', 'SQLite', 'Material 3'],
+      /** A real, working, downloadable build. Both links are live. */
+      links: [
+        { label: 'Download the APK', href: 'https://github.com/0535MANIDEEP/blood-bank-android/releases/download/v1.0/BloodBank-v1.0.apk', external: true, primary: true },
+        { label: 'Source', href: 'https://github.com/0535MANIDEEP/blood-bank-android', external: true },
+      ],
+      note: 'Installs on Android 7.0 and newer. Runs fully offline, no account or API keys.',
     },
     {
       id: 'foodforward',
@@ -166,6 +172,8 @@ export const projects = {
       kicker: 'Published research, built in full',
       body: 'A full stack platform that redirects surplus food from events and restaurants to nearby shelter hubs, with routing logic and impact tracking. The research became a JETIR paper.',
       stack: ['React.js', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'REST APIs'],
+      links: [],
+      note: 'Source available on request.',
     },
   ],
 };
