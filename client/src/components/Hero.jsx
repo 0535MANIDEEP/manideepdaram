@@ -63,7 +63,7 @@ export function Hero() {
 
           <h1
             data-testid="hero-headline"
-            className="mt-5 font-display text-5xl font-extrabold leading-none tracking-tighter text-primary sm:text-6xl lg:text-7xl"
+            className="mt-5 font-display text-[clamp(1.75rem,9vw,3rem)] font-extrabold leading-none tracking-tighter text-primary lg:text-[clamp(3.25rem,4.6vw,3.75rem)]"
           >
             {hero.headlineLines.map((line, i) => (
               <MaskedLine key={line} delay={0.18 + i * 0.11}>

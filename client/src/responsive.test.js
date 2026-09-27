@@ -206,6 +206,60 @@ describe('every responsive class in the source exists in the stylesheet', () => 
   });
 });
 
+describe('the headline is sized so the name is never cut off', () => {
+  /*
+   * "MANIDEEP" is one unbreakable word in Syne ExtraBold. At text-5xl it
+   * measures 423px, while a 320px phone gives the headline 262px after the
+   * container padding, and .mask-line sets overflow:hidden, so 161px of the name
+   * was removed rather than wrapped. A single word cannot wrap, so only a fluid
+   * size can fix it.
+   *
+   * Measured with a Range rather than scrollWidth, because a block that is not
+   * overflowing reports scrollWidth equal to clientWidth whatever the glyphs are
+   * doing inside it. What the browser actually rendered:
+   *
+   *   320px  available 262  text 254  headroom 8
+   *   360px  available 302  text 286  headroom 16
+   *   414px  available 357  text 329  headroom 28
+   *   1024px available 532  text 459  headroom 73
+   *   1440px available 644  text 529  headroom 115
+   */
+  test('the base headline size is fluid, not a fixed step', async () => {
+    const hero = await readSource('src/components/Hero.jsx');
+    const h1 = /<h1[\s\S]*?className="([^"]+)"/.exec(hero);
+    assert.ok(h1, 'could not find the hero h1 className');
+
+    const baseSize = h1[1].split(/\s+/).find((c) => c.startsWith('text-') && !c.includes(':'));
+    assert.ok(baseSize, 'the h1 has no base text size');
+    assert.ok(
+      baseSize.includes('clamp') || baseSize.includes('vw'),
+      'the base h1 size must be fluid, found: ' + baseSize,
+    );
+  });
+
+  test('no breakpoint overrides the headline with a larger fixed step', async () => {
+    // The headline column is narrowest exactly where the type is largest: seven
+    // of twelve columns at the lg breakpoint. A fixed text-7xl there needs
+    // 635px in a 532px box, so the lg step has to be fluid as well.
+    const hero = await readSource('src/components/Hero.jsx');
+    const h1 = /<h1[\s\S]*?className="([^"]+)"/.exec(hero);
+    const fixed = h1[1]
+      .split(/\s+/)
+      .filter((c) => /^(sm|md|lg|xl|2xl):text-/.test(c) && !c.includes('clamp') && !c.includes('vw'));
+
+    assert.deepEqual(fixed, [], 'these fixed steps overflow the headline column: ' + fixed.join(', '));
+  });
+
+  test('the headline mask still clips, deliberately', async () => {
+    // overflow:hidden is what turned an overflowing word into a silently missing
+    // one. It is still correct for the reveal, so this only records that the
+    // combination is intentional rather than accidental.
+    const source = await readSource('src/index.css');
+    const mask = /\.mask-line\s*\{([^}]*)\}/.exec(source);
+    assert.ok(mask, 'could not find the .mask-line rule');
+    assert.ok(mask[1].includes('overflow'), '.mask-line should still clip for the reveal');
+  });
+});
 describe('the header can be found, and it fits', () => {
   test('the desktop nav and the mobile toggle are literal classes', async () => {
     const header = await readSource('src/components/Header.jsx');
