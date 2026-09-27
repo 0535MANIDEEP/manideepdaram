@@ -104,15 +104,24 @@ export function ProjectDetail({ projectId, onClose }) {
       </div>
 
       {/*
-        overscroll-contain is the load bearing part. Without it, reaching the top
-        or bottom of this panel hands the scroll to the page behind, so on a phone
-        a swipe near the top of the content slides the whole site up under the
-        overlay while the reader thinks they are scrolling the detail. The wheel
-        and touch handlers on the body are stopped, but overscroll chaining is
-        browser behaviour and no amount of stopping JS handlers prevents it.
+        data-lenis-prevent is load bearing, and it is the reason this panel
+        scrolls at all. Lenis listens for wheel and touch on the window and
+        preventDefaults anything it believes it owns, so an inner overflow
+        container silently stops responding to the wheel. Marking the panel as a
+        prevented region hands those events back to the browser and the native
+        scroll runs.
+
+        Without it this panel looked correct and scrolled with a script:
+        scrollHeight was 1482 in a 600px box and assigning scrollTop moved it, so
+        every automated check passed. Only a real wheel or a real finger found
+        it, because setting scrollTop bypasses event handling entirely.
+
+        overscroll-contain then stops the panel handing the gesture to the
+        document at either end, which would slide the site up underneath.
       */}
       <div
         ref={panelRef}
+        data-lenis-prevent
         className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
       >
         <div className="container-page py-12 sm:py-16">

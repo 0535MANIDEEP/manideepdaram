@@ -1,6 +1,48 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------
+   LENIS
+   Lenis v1 ships no stylesheet of its own. These are the rules it expects,
+   and without them the smooth scroll layer and the native one disagree.
+------------------------------------------------------------------- */
+@layer base {
+  /* Lenis drives scroll itself, so the document must not also scroll natively
+     and must not be told to smooth-scroll by the browser at the same time. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  /* While the detail overlay is open Lenis is stopped, and the document is
+     locked. Without this the page behind can still be dragged or flung with a
+     touch, because stopping Lenis only stops Lenis. */
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  /* The opt out that makes a nested scroller work at all. Lenis listens for
+     wheel and touch on the window and calls preventDefault on anything it
+     thinks it owns, so an inner overflow container never receives a native
+     scroll unless it is marked. This is the whole reason the project detail
+     panel would not scroll: the panel was a real scroll container with real
+     overflowing content, and every wheel event over it was being consumed
+     before it got there. */
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  /* While stopped, a prevented region scrolls natively and must chain to
+     nothing, so the lock on the document is not bypassed by overscroll. */
+  .lenis.lenis-stopped [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+}
+
+/* ------------------------------------------------------------------
    DESIGN TOKENS
    One accent (cyan). Emerald is reserved for a single semantic meaning:
    the JETIR "published" marker. Never decorative. (skill 4.2, 4.2 lock)

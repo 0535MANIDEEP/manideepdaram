@@ -405,6 +405,43 @@ describe('no link in the content is smaller than a thumb can hit', () => {
   });
 });
 
+describe('a nested scroller is exempted from the smooth scroll layer', () => {
+  // The detail panel did not scroll, and every automated check said it did.
+  // Its scrollHeight was 1482 in a 600px box, and assigning scrollTop moved it,
+  // so the render test and the measurement both passed. Only a real wheel found
+  // it, because setting scrollTop bypasses event handling entirely.
+  //
+  // The cause: Lenis listens for wheel and touch on the window and
+  // preventDefaults anything it thinks it owns, so an inner overflow container
+  // never received a native scroll. There was no way to see that from markup
+  // alone except the marker Lenis itself provides, so the marker is the assertion.
+  //
+  // Verified in a real browser that a wheel over the panel is not consumed while
+  // one over the page behind is, which is the behaviour that is actually wanted:
+  // the panel scrolls and the page underneath does not.
+
+  test('the detail panel carries data-lenis-prevent', () => {
+    const detail = renderToString(
+      createElement(ProjectDetail, { projectId: 'foodforward', onClose: noop }),
+    );
+    assert.ok(
+      /data-lenis-prevent/.test(detail),
+      'the detail panel has no data-lenis-prevent, so Lenis will eat every wheel event over it',
+    );
+  });
+
+  test('the panel is a scroll container that can actually overflow', () => {
+    // Guarding the guard. If the panel stopped being the scroller, the marker
+    // would be harmless and this test would still pass while the original bug
+    // came back through a different route.
+    const detail = renderToString(
+      createElement(ProjectDetail, { projectId: 'foodforward', onClose: noop }),
+    );
+    assert.ok(/overflow-y-auto/.test(detail), 'the detail panel is no longer the scroll container');
+    assert.ok(/min-h-0/.test(detail), 'without min-h-0 the flex child cannot shrink, so it cannot scroll');
+  });
+});
+
 describe('the project detail page', () => {  for (const project of projects.items) {
     test(`${project.id} detail renders its actions and repository`, () => {
       const detail = renderToString(

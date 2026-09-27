@@ -134,6 +134,37 @@ describe('the build produced a stylesheet worth inspecting', () => {
     assert.equal(buildFailed, null, 'the client build failed: ' + (buildFailed?.message ?? 'unknown'));
   });
 
+  test('the Lenis stylesheet rules the library needs were emitted', () => {
+    // Lenis v1 ships no stylesheet of its own, so these have to be written by
+    // hand or the smooth scroll layer and the native one disagree.
+    //
+    // `lenis-stopped` is the important one: it locks the document while the
+    // project detail overlay is open. Without it, stopping Lenis only stops
+    // Lenis, and the page behind can still be flung with a touch.
+    //
+    // `data-lenis-prevent` is the other half of the same problem, and the reason
+    // the detail panel did not scroll. Lenis preventDefaults wheel and touch at
+    // the window, so an inner overflow container never gets a native scroll
+    // unless it is marked. The marker is asserted in render.test.js, because
+    // that is a markup fact; this asserts the rules the marker depends on
+    // actually made it into the built stylesheet rather than being silently
+    // dropped as unused.
+    const REQUIRED = [
+      'html.lenis',
+      'lenis-smooth',
+      'lenis-stopped',
+      'data-lenis-prevent',
+      'overscroll-behavior',
+    ];
+
+    for (const selector of REQUIRED) {
+      assert.ok(
+        css.includes(selector),
+        `the built stylesheet has no rule for "${selector}", so Lenis and the browser will fight over scroll`,
+      );
+    }
+  });
+
   test('every breakpoint in use has a media query', async () => {
     // Only for breakpoints the source actually uses. Tailwind emits a variant's
     // media query when something uses it and omits it otherwise, so demanding
