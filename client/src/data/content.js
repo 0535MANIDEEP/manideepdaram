@@ -34,14 +34,47 @@ export const hero = {
 };
 
 /**
- * Photography. Re-requested from the supplied Unsplash IDs at 1200x800 webp.
- * The originals were 1.1 MB, 7.9 MB and 2.8 MB, which alone would have blown
- * the LCP budget in skill 6.D. These three total roughly 300 KB.
+ * Hero backdrop only. Re-requested from the supplied Unsplash ID at 1200x800
+ * webp; the original was 1.1 MB. It sits at low opacity behind the canvas
+ * particle field as texture, so it makes no claim about the work.
  */
 export const images = {
   hero: 'https://images.unsplash.com/photo-1672872476232-da16b45c9001?w=1200&h=800&fit=crop&q=70&fm=webp',
-  bloodbank: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1200&h=800&fit=crop&q=70&fm=webp',
-  foodforward: 'https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=1200&h=800&fit=crop&q=70&fm=webp',
+};
+
+/**
+ * Project visuals.
+ *
+ * There are no stock photographs here on purpose. A picture of somebody else's
+ * desk says nothing about a blood bank app, and generic imagery is exactly the
+ * filler this site should not contain. Each project is represented by a diagram
+ * of how it actually works, drawn only from the real project descriptions.
+ */
+export const projectFlows = {
+  'android-blood-bank': {
+    caption: 'How the app works',
+    steps: [
+      { icon: 'userPlus', label: 'Donor registers', detail: 'Blood group and contact stored on device' },
+      { icon: 'drop', label: 'Inventory tracked', detail: 'Blood bank stock updated in real time' },
+      { icon: 'usersThree', label: 'Request is matched', detail: 'Algorithm pairs a request to eligible donors' },
+      { icon: 'mapPin', label: 'Nearby donors alerted', detail: 'Location proximity ranks who gets notified' },
+      { icon: 'chat', label: 'Donor and bank talk', detail: 'One thread for the whole handover' },
+    ],
+  },
+  foodforward: {
+    caption: 'How the platform works',
+    steps: [
+      { icon: 'storefront', label: 'Surplus is reported', detail: 'Events and restaurants log what is left' },
+      { icon: 'path', label: 'Routing is computed', detail: 'Nearest shelter hub picked for the load' },
+      { icon: 'usersThree', label: 'Hub is notified', detail: 'Collection window and quantity agreed' },
+      { icon: 'chartLine', label: 'Impact is recorded', detail: 'Meals redirected tracked per collection' },
+    ],
+    citation: {
+      journal: 'JETIR',
+      detail: 'Vol. 11, Issue 4, April 2024',
+      id: 'JETIR2404570',
+    },
+  },
 };
 
 /** Metrics band sits directly under the hero, never inside it (SS 4.7). */
@@ -126,8 +159,6 @@ export const projects = {
       kicker: 'Key academic project',
       body: 'A native Android application for real time blood inventory tracking. It matches donors to requests, alerts nearby donors by location, and keeps donors and blood banks talking in one place.',
       stack: ['Android Studio', 'Java', 'Firebase', 'Google Maps API', 'XML UI', 'SQLite'],
-      image: 'bloodbank',
-      alt: 'Developer workspace with a dark room lit by a monitor showing an Android project',
     },
     {
       id: 'foodforward',
@@ -135,8 +166,6 @@ export const projects = {
       kicker: 'Published research, built in full',
       body: 'A full stack platform that redirects surplus food from events and restaurants to nearby shelter hubs, with routing logic and impact tracking. The research became a JETIR paper.',
       stack: ['React.js', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'REST APIs'],
-      image: 'foodforward',
-      alt: 'Two monitors side by side showing code and a dark room desk setup',
     },
   ],
 };

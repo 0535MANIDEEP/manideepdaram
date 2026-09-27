@@ -1,7 +1,8 @@
 import { ArrowUpRight } from './icons.jsx';
-import { projects, images, identity } from '../data/content.js';
+import { projects, projectFlows, identity } from '../data/content.js';
 import { SectionHeading } from './SectionHeading.jsx';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
+import { ProjectFlow } from './ProjectFlow.jsx';
 
 /**
  * Layout family: a two cell bento, 7/5.
@@ -9,12 +10,14 @@ import { RevealGroup, RevealItem } from './Reveal.jsx';
  * skill 4.7 requires exactly as many bento cells as there are items. There are
  * two projects, so there are two cells and no filler tile.
  *
- * Both cells carry real photography, which satisfies the background diversity
- * rule. There are deliberately no repository links: none were supplied, and
- * inventing plausible URLs would be a fabrication. (skill 9.D)
+ * Both cells now carry a real diagram instead of stock photography, which
+ * satisfies the background-diversity rule with information rather than
+ * decoration.
+ *
+ * There are deliberately no repository links: none were supplied, and inventing
+ * plausible URLs would be a fabrication. (skill 9.D)
  */
 const SPANS = ['lg:col-span-7', 'lg:col-span-5'];
-const RATIOS = ['aspect-[16/10]', 'aspect-[4/3]'];
 
 export function Projects() {
   return (
@@ -27,24 +30,14 @@ export function Projects() {
         />
 
         <RevealGroup className="mt-14 grid grid-cols-1 gap-4 lg:grid-cols-12" stagger={0.1}>
-          {projects.items.map((p, i) => (
-            <RevealItem key={p.id} className={SPANS[i]}>
-              <article
-                data-testid={`project-card-${p.id}`}
-                className="edge-lit group flex h-full flex-col overflow-hidden rounded-surface bg-surface"
-              >
-                <div className={`relative overflow-hidden ${RATIOS[i]}`}>
-                  <img
-                    src={images[p.image]}
-                    alt={p.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover opacity-70 transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/30 to-transparent" />
-                </div>
-
-                <div className="flex flex-1 flex-col p-7 pt-2">
+          {projects.items.map((p, i) => {
+            const flow = projectFlows[p.id];
+            return (
+              <RevealItem key={p.id} className={SPANS[i]}>
+                <article
+                  data-testid={`project-card-${p.id}`}
+                  className="edge-lit group flex h-full flex-col rounded-surface bg-surface p-7"
+                >
                   <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-70">
                     {p.kicker}
                   </p>
@@ -66,19 +59,25 @@ export function Projects() {
                     ))}
                   </ul>
 
+                  <ProjectFlow
+                    caption={flow.caption}
+                    steps={flow.steps}
+                    citation={flow.citation}
+                  />
+
                   <a
                     href={identity.github}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="mt-7 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-primary"
+                    className="mt-auto inline-flex w-fit items-center gap-1.5 pt-7 text-sm font-semibold text-accent transition-colors hover:text-primary"
                   >
                     More on GitHub
                     <ArrowUpRight size={15} weight="bold" />
                   </a>
-                </div>
-              </article>
-            </RevealItem>
-          ))}
+                </article>
+              </RevealItem>
+            );
+          })}
         </RevealGroup>
       </div>
     </section>

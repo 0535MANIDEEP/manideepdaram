@@ -21,6 +21,14 @@ import { X } from '@phosphor-icons/react/dist/csr/X';
 import { CircleNotch } from '@phosphor-icons/react/dist/csr/CircleNotch';
 import { SignOut } from '@phosphor-icons/react/dist/csr/SignOut';
 import { ArrowClockwise } from '@phosphor-icons/react/dist/csr/ArrowClockwise';
+import { UserPlus } from '@phosphor-icons/react/dist/csr/UserPlus';
+import { Drop } from '@phosphor-icons/react/dist/csr/Drop';
+import { UsersThree } from '@phosphor-icons/react/dist/csr/UsersThree';
+import { MapPin } from '@phosphor-icons/react/dist/csr/MapPin';
+import { ChatCircleDots } from '@phosphor-icons/react/dist/csr/ChatCircleDots';
+import { Storefront } from '@phosphor-icons/react/dist/csr/Storefront';
+import { Path } from '@phosphor-icons/react/dist/csr/Path';
+import { ChartLineUp } from '@phosphor-icons/react/dist/csr/ChartLineUp';
 
 export const ICONS = {
   linkedinLogo: LinkedinLogo,
@@ -41,6 +49,14 @@ export const ICONS = {
   circleNotch: CircleNotch,
   signOut: SignOut,
   arrowClockwise: ArrowClockwise,
+  userPlus: UserPlus,
+  drop: Drop,
+  usersThree: UsersThree,
+  mapPin: MapPin,
+  chat: ChatCircleDots,
+  storefront: Storefront,
+  path: Path,
+  chartLine: ChartLineUp,
 };
 
 // Re-exported so components can use an icon directly without going through
