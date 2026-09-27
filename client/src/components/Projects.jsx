@@ -1,4 +1,8 @@
-import { ArrowUpRight } from './icons.jsx';
+// ArrowDown is the primary link's chevron and ArrowUpRight the secondary one.
+// ArrowDown was used here without ever being imported, which made it undefined
+// and threw a ReferenceError the first time any project link rendered. That
+// crashed the whole React tree, so the deployed site was a blank white page.
+import { ArrowDown, ArrowUpRight } from './icons.jsx';
 import { projects, projectFlows } from '../data/content.js';
 import { SectionHeading } from './SectionHeading.jsx';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
