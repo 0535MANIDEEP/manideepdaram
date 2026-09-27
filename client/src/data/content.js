@@ -53,12 +53,16 @@ export const images = {
 export const projectFlows = {
   'android-blood-bank': {
     caption: 'How the app works',
+    // Every step here was checked against the source in blood-bank-android. The
+    // previous version claimed a chat thread and real time stock updates, and
+    // neither exists: there is no messaging code, no Firebase, and the manifest
+    // has no INTERNET permission, so nothing could be real time. Two features
+    // that were never built had been described as if they had.
     steps: [
-      { icon: 'userPlus', label: 'Donor registers', detail: 'Blood group and contact stored on device' },
-      { icon: 'drop', label: 'Inventory tracked', detail: 'Blood bank stock updated in real time' },
-      { icon: 'usersThree', label: 'Request is matched', detail: 'Algorithm pairs a request to eligible donors' },
-      { icon: 'mapPin', label: 'Nearby donors alerted', detail: 'Location proximity ranks who gets notified' },
-      { icon: 'chat', label: 'Donor and bank talk', detail: 'One thread for the whole handover' },
+      { icon: 'userPlus', label: 'Donor registers', detail: 'Blood group, phone and city, stored in SQLite on the device' },
+      { icon: 'drop', label: 'Request is raised', detail: 'A hospital asks for units of a group and gives its location' },
+      { icon: 'mapPin', label: 'Donors are matched', detail: 'Compatible groups only, ranked nearest first from the hospital' },
+      { icon: 'list', label: 'Stock is listed', detail: 'Blood bank units held locally, and a tap opens the dialer pre-filled' },
     ],
   },
   foodforward: {
@@ -106,7 +110,7 @@ export const about = {
   ],
   strengths: [
     { label: 'Backend and APIs', detail: 'REST services in Node and Express, relational schema design in MySQL' },
-    { label: 'Android', detail: 'Native Java apps with SQLite and Google Maps' },
+    { label: 'Android', detail: 'Native Java apps, local SQLite, on-device matching' },
     { label: 'Research', detail: 'Co-author on a UGC approved JETIR publication' },
     { label: 'Practice', detail: 'Agile delivery, code review, Git branching' },
   ],
@@ -157,7 +161,7 @@ export const projects = {
       id: 'android-blood-bank',
       title: 'Android Blood Bank Management App',
       kicker: 'Native Android',
-      body: 'A native Android application for blood bank stock and donor matching. Register donors with their blood group, raise a request for units from a hospital, and the app returns compatible donors ranked by distance with one tap to call.',
+      body: 'A native Android application for blood bank stock and donor matching. Register donors with their blood group, raise a request for units from a hospital, and the app returns donors of compatible groups ranked by distance, with a tap to open the dialer pre-filled. Everything runs on the device.',
       stack: ['Android Studio', 'Java', 'XML UI', 'SQLite', 'Material 3'],
       repo: 'https://github.com/0535MANIDEEP/blood-bank-android',
       /**

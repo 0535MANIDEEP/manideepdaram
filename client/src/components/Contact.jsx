@@ -126,11 +126,19 @@ export function Contact() {
                   </p>
                   <p className="text-sm text-primary">
                     {href ? (
+                      // py-1 with -my-1 adds 8px of tap height and cancels the
+                      // layout growth, so the hit box goes from a measured 18px to
+                      // 28px without moving anything. 18px fails the WCAG 2.2 target
+                      // size minimum of 24 by six, on the links a reader is most
+                      // likely to press: email, phone and LinkedIn. Negative margin
+                      // rather than padding alone, because these sit in a 16px gap
+                      // and padding without the cancellation would overlap the
+                      // neighbouring row's hit area.
                       <a
                         href={href}
                         target={href.startsWith('http') ? '_blank' : undefined}
                         rel={href.startsWith('http') ? 'noreferrer noopener' : undefined}
-                        className="transition-colors hover:text-accent"
+                        className="inline-block py-1 -my-1 transition-colors hover:text-accent"
                       >
                         {value}
                       </a>

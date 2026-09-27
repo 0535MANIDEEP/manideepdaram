@@ -6,7 +6,7 @@ import { createServer } from 'vite';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { projects, projectFlows, research } from './data/content.js';
+import { projects, projectFlows, research, about, milestones } from './data/content.js';
 
 /**
  * The site has to actually render.
@@ -219,6 +219,47 @@ describe('every project renders with a diagram and working links', () => {
       }
     }
   });
+
+  test('no copy anywhere claims a feature or library that is not in the code', () => {
+    // Wider than the test above, which only checked the stack chips. Checking the
+    // prose is what matters, because that is where the claims actually drifted.
+    //
+    // All four of these were in the site and all four are absent from
+    // blood-bank-android, which has no messaging code, no Firebase, no play
+    // services dependency, and an AndroidManifest whose only permissions are
+    // location. A description of a feature that was never built is worse than no
+    // description, because a reader cannot tell it apart from a real one.
+    const BANNED = [
+      { term: /google maps/i, why: 'no play services dependency in the project' },
+      { term: /firebase/i, why: 'not in the project, and there is no INTERNET permission' },
+      { term: /\bchat\b/i, why: 'there is no messaging code in the project' },
+      { term: /real[ -]?time/i, why: 'the app is fully offline, so nothing can be real time' },
+      { term: /mongo/i, why: 'no shipped project uses it' },
+    ];
+
+    const prose = JSON.stringify({ projects, projectFlows, about, milestones, research });
+
+    for (const { term, why } of BANNED) {
+      const match = prose.match(term);
+      assert.equal(
+        match,
+        null,
+        `the site still claims "${match?.[0]}", because ${why}`,
+      );
+    }
+  });
+
+  test('the Android app is described as offline, because it is', () => {
+    // Verified in AndroidManifest: the only permissions are ACCESS_COARSE_LOCATION
+    // and ACCESS_FINE_LOCATION. No INTERNET, no network code anywhere.
+    const bloodBank = projects.items.find((p) => p.id === 'android-blood-bank');
+    const text = JSON.stringify(bloodBank).toLowerCase();
+
+    assert.ok(
+      /offline|no network|none required/.test(text),
+      'the Android project should state that it needs no network, because it does not',
+    );
+  });
 });
 
 describe('the project card offers exactly two things', () => {
@@ -279,8 +320,84 @@ describe('the project card offers exactly two things', () => {
   });
 });
 
-describe('the project detail page', () => {
-  for (const project of projects.items) {
+describe('no link in the content is smaller than a thumb can hit', () => {
+  // Measured, not guessed. Rendering the app inside a 320px wide iframe and
+  // reading every anchor out of it showed the email, phone and LinkedIn links in
+  // the contact block sitting at 18px tall. WCAG 2.2 asks for 24 by 24 as a
+  // minimum, so those three were six pixels short, on the three links a reader is
+  // most likely to press on a phone.
+  //
+  // A browser is not available in this suite, so the rule is enforced where it
+  // can be: on the markup. Any anchor with no padding and no explicit size is a
+  // bare text link whose hit area is exactly its line box, which is what made the
+  // measurement come out at 18px in the first place.
+  const HAS_HIT_AREA = /(^|\s)(p[trblxy]?-[0-9.]|px-[0-9.]|py-[0-9.]|h-[0-9.]|min-h-[0-9.]|size-[0-9.]|leading-\[)/;
+
+  /**
+   * Scoped to <main>, and deliberately so.
+   *
+   * The header and footer are excluded because the things flagged in them are
+   * not touch targets in practice. The four desktop nav links are inside a
+   * `hidden lg:flex` container, so they only exist from 1024px up where the
+   * pointer is a mouse, and the mobile menu they are duplicated in uses `py-3`
+   * for roughly 46px. The brand monogram is 34px, which clears the 24px
+   * minimum. Padding the desktop nav would have grown the header, and there is
+   * already a test holding the header to one row at 1024px.
+   *
+   * Checking chrome here would mean either failing on things that are fine or
+   * teaching the test to guess at breakpoints, and a test that guesses is worse
+   * than no test.
+   *
+   * Computed by a function rather than once at describe scope. A describe body
+   * runs while the module is being evaluated, which is before the async before
+   * hook has assigned html, so a constant here captures undefined and every
+   * assertion below quietly passes or throws against nothing.
+   */
+  const mainRegion = () => /<main\b[\s\S]*?<\/main>/.exec(html)?.[0] ?? html;
+
+  test('every anchor in the content has padding or an explicit size', () => {
+    const main = mainRegion();
+    const anchors = [...main.matchAll(/<a\b([^>]*)>/g)];
+
+    const bare = [];
+    for (const [, attrs] of anchors) {
+      const cls = /class="([^"]*)"/.exec(attrs)?.[1] ?? '';
+      if (!cls) {
+        bare.push('<a> with no class at all');
+        continue;
+      }
+      if (!HAS_HIT_AREA.test(cls)) bare.push(cls.slice(0, 80));
+    }
+
+    assert.equal(
+      bare.length,
+      0,
+      `${bare.length} anchor(s) in the content have neither padding nor a size, so the tap ` +
+        `target is the line box and nothing else:\n${bare.map((b) => '  ' + b).join('\n')}`,
+    );
+  });
+
+  test('the scope is not empty, so the checks above are not vacuous', () => {
+    // Guards the guard. A regex that failed to match would fall back to the whole
+    // document, and a future edit that emptied <main> would turn this into a
+    // check over nothing at all while still reporting success.
+    const main = mainRegion();
+    assert.ok(main.length > 5000, `the main region matched only ${main.length} characters`);
+    assert.ok(main.includes('mailto:'), 'the main region does not contain the contact links');
+  });
+
+  test('the contact links carry a hit area that cancels its own layout', () => {
+    // py-1 alone would grow the row and overlap the next row's link, because the
+    // gap between rows is 16px. The negative margin is what makes the padding
+    // safe, so the two have to stay together.
+    assert.ok(
+      /class="[^"]*py-1[^"]*-my-1[^"]*"/.test(mainRegion()),
+      'the inline contact links lost their py-1 -my-1 pair',
+    );
+  });
+});
+
+describe('the project detail page', () => {  for (const project of projects.items) {
     test(`${project.id} detail renders its actions and repository`, () => {
       const detail = renderToString(
         createElement(ProjectDetail, { projectId: project.id, onClose: noop }),

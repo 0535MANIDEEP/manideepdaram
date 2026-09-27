@@ -103,7 +103,18 @@ export function ProjectDetail({ projectId, onClose }) {
         </button>
       </div>
 
-      <div ref={panelRef} className="min-h-0 flex-1 overflow-y-auto">
+      {/*
+        overscroll-contain is the load bearing part. Without it, reaching the top
+        or bottom of this panel hands the scroll to the page behind, so on a phone
+        a swipe near the top of the content slides the whole site up under the
+        overlay while the reader thinks they are scrolling the detail. The wheel
+        and touch handlers on the body are stopped, but overscroll chaining is
+        browser behaviour and no amount of stopping JS handlers prevents it.
+      */}
+      <div
+        ref={panelRef}
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+      >
         <div className="container-page py-12 sm:py-16">
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-70">
             {project.kicker}

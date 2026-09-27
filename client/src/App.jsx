@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useLenis } from './hooks/useLenis.js';
 import { Header } from './components/Header.jsx';
@@ -30,6 +30,11 @@ function readProjectFromHash() {
 
 export default function App() {
   const [openProject, setOpenProject] = useState(readProjectFromHash);
+  // The fragment the reader was on before they opened a project, so closing puts
+  // them back where they were. Without this, opening a project from the nav at
+  // #projects and closing it leaves the URL at the bare path, and a refresh
+  // afterwards drops them at the top of a long page.
+  const returnHashRef = useRef('');
 
   // Smooth scroll is stopped while the detail overlay is up. Without this the
   // page behind scrolls under the overlay and the wheel does nothing useful.
@@ -45,17 +50,19 @@ export default function App() {
   }, []);
 
   const open = useCallback((id) => {
+    if (!returnHashRef.current) {
+      const current = window.location.hash;
+      returnHashRef.current = current.startsWith('#/project/') ? '' : current;
+    }
     window.location.hash = `#/project/${id}`;
   }, []);
 
   const close = useCallback(() => {
     // replaceState rather than assigning an empty hash, which would leave a bare
     // "#" at the end of the URL and add a second entry to the back stack.
-    window.history.replaceState(
-      null,
-      '',
-      window.location.pathname + window.location.search,
-    );
+    const back = returnHashRef.current;
+    returnHashRef.current = '';
+    window.history.replaceState(null, '', window.location.pathname + window.location.search + back);
     setOpenProject(null);
   }, []);
 
