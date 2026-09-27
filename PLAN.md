@@ -6,7 +6,11 @@ A recruiter opens the site, understands Manideep in 20 seconds, and requests his
 The request reaches his Gmail. The site is live on GitHub Pages. Tests and build are green
 in CI before every deploy.
 
-## Status: COMPLETE, deployed to GitHub Pages
+## Status: COMPLETE and deployed
+
+- Live: https://0535manideep.github.io/manideepdaram/
+- Repo: https://github.com/0535MANIDEEP/manideepdaram
+- Deployed by `.github/workflows/deploy.yml` on every push to `main`
 
 ## Architecture (final)
 

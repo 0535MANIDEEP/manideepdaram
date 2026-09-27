@@ -2,6 +2,8 @@
 
 Static single page portfolio. Deployed to GitHub Pages. No server, no database.
 
+**Live:** https://0535manideep.github.io/manideepdaram/
+
 Recruiters request the resume through a form. Submissions arrive in Gmail.
 
 ## Stack
