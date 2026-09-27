@@ -1,0 +1,256 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------
+   DESIGN TOKENS
+   One accent (cyan). Emerald is reserved for a single semantic meaning:
+   the JETIR "published" marker. Never decorative. (skill 4.2, 4.2 lock)
+   One radius system. One type scale. One theme: dark, locked. (4.4, 4.11)
+   Background is off-black, never #000000. (skill 9.A)
+------------------------------------------------------------------- */
+@theme {
+  /* Surfaces */
+  --color-ink: #06080c;
+  --color-ink-raised: #0a0e17;
+  --color-surface: #0e131f;
+  --color-surface-hover: #141c2e;
+
+  /* Text */
+  --color-primary: #f8fafc;
+  --color-secondary: #94a3b8;
+  /* Was #64748b, which measured 3.90:1 on --color-surface and failed WCAG AA
+     on every small mono label. This reads 5.8:1 on the lightest surface while
+     staying visibly recessed below --color-secondary. */
+  --color-muted: #8294a8;
+
+  /* THE accent. Cyan. */
+  --color-accent: #00f0ff;
+  /* Large fills and 1px strokes use these, so full-strength cyan
+     never floods a surface. */
+  --color-accent-12: rgb(0 240 255 / 0.12);
+  --color-accent-20: rgb(0 240 255 / 0.2);
+  --color-accent-40: rgb(0 240 255 / 0.4);
+  --color-accent-70: rgb(0 240 255 / 0.7);
+
+  /* Semantic only: verified / published. */
+  --color-verified: #00ff88;
+
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
+
+  /* Type */
+  --font-display: 'Syne', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* Radius: ONE system.
+     Surfaces and inputs are near-sharp (tactical register).
+     Buttons and status pills are full-round.
+     This is the documented mixed rule permitted by skill 4.4. */
+  --radius-surface: 4px;
+  --radius-control: 4px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  --container-page: 1400px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Sticky header is 72px. Anchor targets must clear it. */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-secondary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-primary);
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: var(--color-accent-20);
+    color: var(--color-primary);
+  }
+
+  /* One consistent focus treatment. Never remove it. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Form controls must not inherit a light-mode UA style on a dark page. */
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-muted);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1f2937;
+    border-radius: 999px;
+    border: 2px solid var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-40);
+  }
+}
+
+@layer utilities {
+  .container-page {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Inner-border neon. Skill 9.A bans outer glows as a default, so the
+     accent reads as a lit edge, not a bloom. */
+  .edge-lit {
+    border: 1px solid var(--color-line);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+    transition:
+      border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .edge-lit:hover {
+    border-color: var(--color-accent-40);
+    background-color: var(--color-surface-hover);
+  }
+
+  /* Film grain. Fixed and pointer-events-none ONLY, never on a scrolling
+     container, or mobile FPS collapses. (skill 6.E) */
+  .grain::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* ------------------------------------------------------------------
+   Masked headline reveal.
+   This is a CSS keyframe rather than a JS animation on purpose. A
+   string-percentage transform (y: '110%') driven by the animation library
+   left the hero headline frozen at its initial offset, so the H1 rendered
+   invisible. A keyframe cannot fail that way, costs no JS, and the global
+   reduced-motion block below already neutralises it.
+------------------------------------------------------------------- */
+@keyframes mask-rise {
+  from {
+    transform: translate3d(0, 110%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.mask-line > span {
+  display: block;
+  animation: mask-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform;
+}
+
+/* Reduced motion is mandatory for anything above MOTION_INTENSITY 3.
+   This collapses the page to a clean static document. (skill 6.B) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Land the headline in its final position rather than mid-mask. */
+  .mask-line > span {
+    animation: none !important;
+    transform: none !important;
+    will-change: auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   The single marquee. Animates transform only, and stops dead under
+   reduced motion, where it becomes a wrapped static list instead of a
+   frozen half-scrolled strip. (skill 5, 6.A, 6.B)
+------------------------------------------------------------------- */
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee {
+  overflow: hidden;
+}
+
+.marquee-track {
+  animation: marquee-scroll 42s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow: visible;
+    padding-block: 1.25rem;
+  }
+  .marquee-track {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+    white-space: normal;
+  }
+}
