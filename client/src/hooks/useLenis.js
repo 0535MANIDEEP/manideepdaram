@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import { useReducedMotion } from 'motion/react';
 
@@ -8,9 +8,14 @@ import { useReducedMotion } from 'motion/react';
  * Gated entirely on prefers-reduced-motion: skill 6.B requires scroll hijack to
  * collapse to native behaviour. There is no ScrollTrigger here, so no
  * lenis.on('scroll', ...) bridge is needed.
+ *
+ * `paused` stops the instance rather than tearing it down. Destroying and
+ * recreating on every overlay open would restart the animation loop and drop the
+ * scroll position, so the page behind would jump.
  */
-export function useLenis() {
+export function useLenis(paused = false) {
   const reduce = useReducedMotion();
+  const lenisRef = useRef(null);
 
   useEffect(() => {
     if (reduce) return;
@@ -22,6 +27,8 @@ export function useLenis() {
       smoothWheel: true,
       touchMultiplier: 1.6,
     });
+
+    lenisRef.current = lenis;
 
     let raf = 0;
     const loop = (time) => {
@@ -49,6 +56,14 @@ export function useLenis() {
       document.removeEventListener('click', onClick);
       cancelAnimationFrame(raf);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, [reduce]);
+
+  useEffect(() => {
+    const lenis = lenisRef.current;
+    if (!lenis) return;
+    if (paused) lenis.stop();
+    else lenis.start();
+  }, [paused]);
 }

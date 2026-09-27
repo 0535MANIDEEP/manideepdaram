@@ -159,12 +159,28 @@ export const projects = {
       kicker: 'Native Android',
       body: 'A native Android application for blood bank stock and donor matching. Register donors with their blood group, raise a request for units from a hospital, and the app returns compatible donors ranked by distance with one tap to call.',
       stack: ['Android Studio', 'Java', 'XML UI', 'SQLite', 'Material 3'],
-      /** A real, working, downloadable build. Both links are live. */
-      links: [
-        { label: 'Download the APK', href: 'https://github.com/0535MANIDEEP/blood-bank-android/releases/download/v1.0/BloodBank-v1.0.apk', external: true, primary: true },
-        { label: 'Source', href: 'https://github.com/0535MANIDEEP/blood-bank-android', external: true },
+      repo: 'https://github.com/0535MANIDEEP/blood-bank-android',
+      /**
+       * What the detail page offers, in the order it should be read.
+       *
+       * `kind` is only a hint for the icon and the wording, never for whether
+       * the link works. Every href here is real and resolves.
+       */
+      actions: [
+        {
+          label: 'Download the APK',
+          href: 'https://github.com/0535MANIDEEP/blood-bank-android/releases/download/v1.0/BloodBank-v1.0.apk',
+          kind: 'download',
+          detail: 'Signed release build. Installs on Android 7.0 and newer, and runs fully offline with no account or API keys.',
+        },
       ],
-      note: 'Installs on Android 7.0 and newer. Runs fully offline, no account or API keys.',
+      facts: [
+        { label: 'Platform', value: 'Android 7.0 and newer' },
+        { label: 'Language', value: 'Java, XML layouts' },
+        { label: 'Storage', value: 'SQLite, on device' },
+        { label: 'Network', value: 'None required' },
+      ],
+      note: 'The build is the release asset above, not a link to a page that describes one.',
     },
     {
       id: 'foodforward',
@@ -181,12 +197,28 @@ export const projects = {
        * routing rules are the paper's.
        */
       stack: ['Node.js', 'Express', 'MySQL', 'React.js', 'Tailwind CSS', 'REST APIs'],
-      links: [
-        { label: 'Live interface', href: 'https://0535manideep.github.io/foodforward/', external: true, primary: true },
-        { label: 'Source', href: 'https://github.com/0535MANIDEEP/foodforward', external: true },
-        { label: 'The paper', href: 'https://www.jetir.org/papers/JETIR2404570.pdf', external: true },
+      repo: 'https://github.com/0535MANIDEEP/foodforward',
+      actions: [
+        {
+          label: 'Visit the live interface',
+          href: 'https://0535manideep.github.io/foodforward/',
+          kind: 'demo',
+          detail: 'Deployed to GitHub Pages. The API is a separate deployment, so the interface reports itself as unconnected until that is running rather than showing invented figures.',
+        },
+        {
+          label: 'Read the paper',
+          href: 'https://www.jetir.org/papers/JETIR2404570.pdf',
+          kind: 'paper',
+          detail: 'JETIR2404570, pp. f645-f647, April 2024. Co-authored, and the reason the schema uses MySQL.',
+        },
       ],
-      note: '148 automated tests, run against a real MySQL server. The interface is deployed to GitHub Pages; the API deploys separately, see render.yaml in the repository.',
+      facts: [
+        { label: 'Database', value: 'MySQL 8, no ORM' },
+        { label: 'Safety rule', value: 'Refused in the transaction' },
+        { label: 'Tests', value: '148, against a real server' },
+        { label: 'Double counting', value: 'Blocked by the schema' },
+      ],
+      note: 'Open endpoints and no authentication, which the interface states on its own about page. Do not put real data in it.',
     },
   ],
 };

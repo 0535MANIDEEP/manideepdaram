@@ -1,8 +1,6 @@
-// ArrowDown is the primary link's chevron and ArrowUpRight the secondary one.
-// ArrowDown was used here without ever being imported, which made it undefined
-// and threw a ReferenceError the first time any project link rendered. That
-// crashed the whole React tree, so the deployed site was a blank white page.
-import { ArrowDown, ArrowUpRight } from './icons.jsx';
+// ArrowDown is the details button's chevron. ArrowUpRight was the former
+// secondary link's chevron and is no longer used here.
+import { ArrowDown, Icon } from './icons.jsx';
 import { projects, projectFlows } from '../data/content.js';
 import { SectionHeading } from './SectionHeading.jsx';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
@@ -26,7 +24,7 @@ import { ProjectFlow } from './ProjectFlow.jsx';
  */
 const SPANS = ['lg:col-span-7', 'lg:col-span-5'];
 
-export function Projects() {
+export function Projects({ onOpen }) {
   return (
     <section id="projects" className="border-y border-line bg-ink-raised py-24 sm:py-32">
       <div className="container-page">
@@ -72,37 +70,43 @@ export function Projects() {
                     citation={flow.citation}
                   />
 
-                  {p.links?.length ? (
-                    <div className="mt-7 flex flex-wrap items-center gap-3">
-                      {p.links.map((link) => (
-                        <a
-                          key={link.label}
-                          href={link.href}
-                          {...(link.external
-                            ? { target: '_blank', rel: 'noreferrer noopener' }
-                            : {})}
-                          data-testid={`project-link-${p.id}-${link.label
-                            .toLowerCase()
-                            .replace(/[^a-z0-9]+/g, '-')}`}
-                          className={
-                            link.primary
-                              ? 'inline-flex items-center gap-2 rounded-pill bg-accent px-5 py-2.5 text-sm font-bold text-ink transition-transform duration-200 hover:brightness-110 active:translate-y-[1px]'
-                              : 'inline-flex items-center gap-2 rounded-pill border border-line-strong px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-200 hover:border-accent-40 hover:bg-accent-12 active:translate-y-[1px]'
-                          }
-                        >
-                          {link.label}
-                          {link.primary ? (
-                            <ArrowDown size={15} weight="bold" />
-                          ) : (
-                            <ArrowUpRight size={15} weight="bold" />
-                          )}
-                        </a>
-                      ))}
-                    </div>
-                  ) : null}
+                  {/*
+                    Exactly two buttons, and that is deliberate.
+
+                    This card once carried five weighted pills with nothing to
+                    distinguish them, which is a menu rather than a call to
+                    action. "Project details" is the only sensible first step,
+                    because the detail page is where the download, the live
+                    interface and the paper are, each with a sentence explaining
+                    what a reader gets. The repository is the second button
+                    because it is the thing people want when they are assessing
+                    the work rather than using it.
+                  */}
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => onOpen(p.id)}
+                      data-testid={`project-details-${p.id}`}
+                      className="inline-flex items-center gap-2 rounded-pill bg-accent px-5 py-2.5 text-sm font-bold text-ink transition-transform duration-200 hover:brightness-110 active:translate-y-[1px]"
+                    >
+                      Project details
+                      <ArrowDown size={15} weight="bold" />
+                    </button>
+
+                    <a
+                      href={p.repo}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      data-testid={`project-repo-${p.id}`}
+                      className="inline-flex items-center gap-2 rounded-pill border border-line-strong px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-200 hover:border-accent-40 hover:bg-accent-12 active:translate-y-[1px]"
+                    >
+                      Visit repository
+                      <Icon name="githubLogo" size={15} weight="fill" />
+                    </a>
+                  </div>
 
                   {p.note ? (
-                    <p className="mt-4 font-mono text-[11px] leading-relaxed text-muted">
+                    <p className="mt-4 text-[11px] leading-relaxed text-muted">
                       {p.note}
                     </p>
                   ) : null}

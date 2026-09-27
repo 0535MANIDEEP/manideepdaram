@@ -30,7 +30,11 @@ import { projects, projectFlows, research } from './data/content.js';
 
 let vite;
 let App;
+let ProjectDetail;
 let html;
+let projectsHtml;
+
+const noop = () => {};
 
 // The suite runs from the repository root, so nothing here may be relative to
 // the cwd. Vite resolves configFile and root against the process directory, and
@@ -53,6 +57,20 @@ before(async () => {
   const mod = await vite.ssrLoadModule('/src/App.jsx');
   App = mod.default;
   html = renderToString(createElement(App));
+
+  // Loaded through Vite rather than with a static import, because node --test
+  // cannot parse JSX. A top level import of the component fails the whole file
+  // with ERR_UNKNOWN_FILE_EXTENSION before a single assertion runs, which looks
+  // like a broken test suite rather than a broken import.
+  const detail = await vite.ssrLoadModule('/src/components/ProjectDetail.jsx');
+  ProjectDetail = detail.ProjectDetail;
+
+  // The projects section on its own, so assertions about a card are scoped to the
+  // card. Checking the whole page instead produced a false failure, because the
+  // research section links the same paper PDF the FoodForward detail page offers,
+  // and that link is supposed to be there.
+  const projectsMod = await vite.ssrLoadModule('/src/components/Projects.jsx');
+  projectsHtml = renderToString(createElement(projectsMod.Projects, { onOpen: noop }));
 });
 
 after(async () => {
@@ -110,55 +128,82 @@ describe('every project renders with a diagram and working links', () => {
     const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|www\.jetir\.org)\//;
 
     for (const project of projects.items) {
-      for (const link of project.links ?? []) {
+      for (const link of [project.repo, ...project.actions.map((a) => a.href)]) {
         assert.match(
-          link.href,
+          link,
           ALLOWED,
-          `project ${project.id} link "${link.label}" is not a real absolute URL: ${link.href}`,
+          `project ${project.id} link ${link} is not a real absolute URL`,
         );
       }
     }
   });
 
-  test('every other project link belongs to the same project as its source repo', () => {
-    // Each project claims at most one repository. Every other link on the card
+  test('every project link belongs to the same project as its repository', () => {
+    // Each project has exactly one repository. Every action on its detail page
     // has to be traceable to that same project, so a card cannot point a reader
     // at a repo that does not contain the thing being described.
     //
-    // "Under the repo" is not the whole rule any more. A download sits under the
+    // "Under the repo" is not the whole rule. A release download sits under the
     // repository's releases, but a deployed interface sits on Pages for that
-    // repository and the paper sits with the publisher. Both are tied to the
-    // project by name, which is the actual requirement, so the repository name
-    // is checked rather than the URL prefix.
+    // repository and the paper sits with the publisher. All three are tied to the
+    // project by name, which is the actual requirement, so the repository name is
+    // checked rather than the URL prefix. That is stricter than a prefix match,
+    // not looser.
     for (const project of projects.items) {
-      const links = project.links ?? [];
-      const sources = links.filter((l) => /Source/i.test(l.label));
-      if (sources.length === 0) continue;
-      assert.equal(sources.length, 1, `project ${project.id} has ${sources.length} source links`);
-
-      const repoUrl = sources[0].href.replace(/\/$/, '');
-      // foodforward, blood-bank-android
+      const repoUrl = project.repo.replace(/\/$/, '');
       const repoName = repoUrl.split('/').filter(Boolean).pop();
 
-      for (const other of links) {
-        if (other === sources[0]) continue;
-
-        const underRepo = other.href.startsWith(repoUrl);
-        // A Pages site for this repository: .../foodforward/ for
-        // .../0535MANIDEEP/foodforward. Case differs between the two, so this
-        // compares lowercased.
+      for (const action of project.actions) {
+        const underRepo = action.href.startsWith(repoUrl);
         const pagesForRepo =
-          other.href.toLowerCase().includes('0535manideep.github.io/') &&
-          other.href.toLowerCase().includes('/' + repoName.toLowerCase() + '/');
-        // The published paper, which is this project's own research output.
-        const isPublishedPaper = other.href === research.paperUrl;
+          action.href.toLowerCase().includes('0535manideep.github.io/') &&
+          action.href.toLowerCase().includes('/' + repoName.toLowerCase() + '/');
+        const isPublishedPaper = action.href === research.paperUrl;
 
         assert.ok(
           underRepo || pagesForRepo || isPublishedPaper,
-          `project ${project.id} link ${other.href} is not traceable to its source repo ${repoUrl}`,
+          `project ${project.id} action ${action.href} is not traceable to its repository ${repoUrl}`,
         );
       }
     }
+  });
+
+  test('every project action says what a reader actually gets', () => {
+    // A download link with no explanation is indistinguishable from a link to a
+    // page describing a download, which is the exact confusion these replaced.
+    for (const project of projects.items) {
+      assert.ok(project.actions.length > 0, `project ${project.id} offers no action at all`);
+      for (const action of project.actions) {
+        assert.ok(action.label, `project ${project.id} has an action with no label`);
+        assert.ok(
+          (action.detail ?? '').length > 30,
+          `project ${project.id} action "${action.label}" does not explain what it gives`,
+        );
+      }
+      assert.ok(project.facts?.length >= 4, `project ${project.id} has too few facts`);
+    }
+  });
+
+  test('a downloadable build is offered as a download, not as a description of one', () => {
+    // The Android card's primary action has to be the release asset itself. A
+    // link to the releases page is a page describing the download, and the note
+    // on that card used to cover for exactly that.
+    const bloodBank = projects.items.find((p) => p.id === 'android-blood-bank');
+    const download = bloodBank.actions.find((a) => a.kind === 'download');
+
+    assert.ok(download, 'the Android project offers no download');
+    assert.match(
+      download.href,
+      /^https:\/\/github\.com\/0535MANIDEEP\/blood-bank-android\/releases\/download\/.+\.apk$/,
+      `the download should be the release asset, got ${download.href}`,
+    );
+  });
+
+  test('a project that has a live site offers it on the detail page', () => {
+    const food = projects.items.find((p) => p.id === 'foodforward');
+    const demo = food.actions.find((a) => a.kind === 'demo');
+    assert.ok(demo, 'FoodForward has a deployed interface but does not link it');
+    assert.equal(demo.href, 'https://0535manideep.github.io/foodforward/');
   });
 
   test('no project claims a technology it did not use', () => {
@@ -173,6 +218,93 @@ describe('every project renders with a diagram and working links', () => {
         );
       }
     }
+  });
+});
+
+describe('the project card offers exactly two things', () => {
+  // Asserted on the rendered markup rather than on the data, because the failure
+  // this guards is a layout one: five weighted pills on a card is a menu, and
+  // reading content.js would not reveal that.
+  test('each card has one details button and one repository link', () => {
+    for (const project of projects.items) {
+      const details = projectsHtml.match(
+        new RegExp(`data-testid="project-details-${project.id}"`, 'g'),
+      );
+      const repo = projectsHtml.match(new RegExp(`data-testid="project-repo-${project.id}"`, 'g'));
+
+      assert.equal(details?.length, 1, `project ${project.id} has ${details?.length ?? 0} details buttons`);
+      assert.equal(repo?.length, 1, `project ${project.id} has ${repo?.length ?? 0} repository links`);
+    }
+  });
+
+  test('the card links nowhere else', () => {
+    // The downloads and the live site moved to the detail page on purpose. If a
+    // direct link reappears here, the card is back to being a menu and the
+    // detail page has no reason to exist.
+    for (const project of projects.items) {
+      for (const action of project.actions) {
+        assert.ok(
+          !projectsHtml.includes(`href="${action.href}"`),
+          `project ${project.id} still links its detail action ${action.href} from the card`,
+        );
+      }
+    }
+  });
+
+  test('the repository link on the card is the project repository', () => {
+    for (const project of projects.items) {
+      assert.ok(
+        projectsHtml.includes(`href="${project.repo}"`),
+        `project ${project.id} does not link its repository`,
+      );
+    }
+  });
+
+  test('every card names both actions in text, not only in an aria label', () => {
+    for (const project of projects.items) {
+      assert.ok(projectsHtml.includes('Project details'), 'the details button has no visible label');
+      assert.ok(projectsHtml.includes('Visit repository'), 'the repository button has no visible label');
+    }
+  });
+
+  test('the whole section offers no more buttons than there are projects', () => {
+    // Two per project, so four in total. Anything more is a control that crept
+    // back onto a card without anybody deciding to put it there.
+    const buttons = projectsHtml.match(/<button/g) ?? [];
+    assert.equal(
+      buttons.length,
+      projects.items.length,
+      `the projects section renders ${buttons.length} buttons for ${projects.items.length} projects`,
+    );
+  });
+});
+
+describe('the project detail page', () => {
+  for (const project of projects.items) {
+    test(`${project.id} detail renders its actions and repository`, () => {
+      const detail = renderToString(
+        createElement(ProjectDetail, { projectId: project.id, onClose: noop }),
+      );
+
+      for (const action of project.actions) {
+        assert.ok(
+          detail.includes(action.href),
+          `detail page for ${project.id} is missing ${action.href}`,
+        );
+      }
+      assert.ok(detail.includes(project.repo), `detail page for ${project.id} is missing its repository`);
+      assert.ok(detail.includes('Visit the repository'), 'the repository action has no label');
+      assert.match(detail, /role="dialog"/, 'the detail page is not a dialog, so it is not announced as one');
+    });
+  }
+
+  test('an unknown project id renders nothing rather than an empty shell', () => {
+    // Without this guard a stale or mistyped hash produces a blank overlay with
+    // no way out, because the close button is inside the thing that failed.
+    const detail = renderToString(
+      createElement(ProjectDetail, { projectId: 'does-not-exist', onClose: noop }),
+    );
+    assert.equal(detail, '');
   });
 });
 
