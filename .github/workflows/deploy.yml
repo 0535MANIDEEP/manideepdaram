@@ -57,3 +57,41 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # A green build says nothing about what Pages actually served. A wrong base
+  # path, a stale cache or a failed upload all produce a green build and a broken
+  # site, and a blank page is the version of that nobody notices.
+  #
+  # This cannot check the rendered DOM without a headless browser, which is not
+  # worth the runner time. What it does check is that the deployed document is
+  # the real one and that every asset it references resolves. The client side
+  # render itself is gated by the render test in the build job.
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Pages to propagate
+        run: sleep 20
+
+      - name: The deployed page is the real document
+        run: |
+          url="${{ steps.deployment.outputs.page_url }}"
+          echo "checking $url"
+          html=$(curl -fsSL --retry 5 --retry-delay 10 "$url")
+          echo "$html" | grep -q 'id="root"' || { echo "::error::no #root in the deployed page"; exit 1; }
+          echo "$html" | grep -qE '<title>[^<]{10,}</title>' || { echo "::error::no real title"; exit 1; }
+          echo "$html" | grep -q 'name="description"' || { echo "::error::no meta description"; exit 1; }
+          echo "ok, the deployed document looks right"
+
+      - name: Every asset the page references resolves
+        run: |
+          url="${{ steps.deployment.outputs.page_url }}"
+          for asset in $(curl -fsSL "$url" | grep -oE '(src|href)="/[^"]+\.(js|css)"' | sed -E 's/.*"([^"]+)"/\1/'); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$url$asset")
+            if [ "$code" != "200" ]; then
+              echo "::error::$asset returned $code"
+              exit 1
+            fi
+            echo "  ok $asset"
+          done
+          echo "ok, all referenced assets resolve"
