@@ -6,7 +6,8 @@ import { createServer } from 'vite';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { projects, projectFlows, research, about, milestones } from './data/content.js';
+import { projects, projectFlows, research } from './data/content.js';
+import * as content from './data/content.js';
 
 /**
  * The site has to actually render.
@@ -237,7 +238,14 @@ describe('every project renders with a diagram and working links', () => {
       { term: /mongo/i, why: 'no shipped project uses it' },
     ];
 
-    const prose = JSON.stringify({ projects, projectFlows, about, milestones, research });
+    // The whole content module, not a hand picked list of exports.
+    //
+    // The first version of this test passed projects, projectFlows, about,
+    // milestones and research, and so it missed a Firebase chip that was sitting
+    // in the skills list the whole time. Enumerating exports is a list to forget
+    // to update, and the thing being guarded is user-visible text, so the whole
+    // module is what gets checked.
+    const prose = JSON.stringify(content);
 
     for (const { term, why } of BANNED) {
       const match = prose.match(term);

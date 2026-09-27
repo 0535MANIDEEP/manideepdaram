@@ -145,7 +145,10 @@ export const skills = {
     },
     {
       name: 'Data and Systems',
-      items: ['DBMS', 'MySQL', 'Schema design', 'SQLite', 'Firebase'],
+      // Firebase came off this list for the same reason MongoDB did. Nothing in
+      // either shipped project uses it, and the Android app's manifest has no
+      // INTERNET permission at all.
+      items: ['DBMS', 'MySQL', 'Schema design', 'SQLite', 'JDBC'],
     },
     {
       name: 'Engineering and Tools',
