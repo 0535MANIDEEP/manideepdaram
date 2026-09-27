@@ -178,7 +178,7 @@ export const projects = {
           label: 'Download the APK',
           href: 'https://github.com/0535MANIDEEP/blood-bank-android/releases/download/v1.0/BloodBank-v1.0.apk',
           kind: 'download',
-          detail: 'Signed release build. Installs on Android 7.0 and newer, and runs fully offline with no account or API keys.',
+          detail: 'Signed release build. Installs on Android 7.0 and newer, and runs fully offline with no account, no API keys and no INTERNET permission.',
         },
       ],
       facts: [
@@ -187,7 +187,7 @@ export const projects = {
         { label: 'Storage', value: 'SQLite, on device' },
         { label: 'Network', value: 'None required' },
       ],
-      note: 'The build is the release asset above, not a link to a page that describes one.',
+      note: 'Installs on Android 7.0 and newer. Runs fully offline, no account or API keys. The build above is the release asset, not a page describing one.',
     },
     {
       id: 'foodforward',
@@ -210,7 +210,7 @@ export const projects = {
           label: 'Visit the live interface',
           href: 'https://0535manideep.github.io/foodforward/',
           kind: 'demo',
-          detail: 'Deployed to GitHub Pages. The API is a separate deployment, so the interface reports itself as unconnected until that is running rather than showing invented figures.',
+          detail: 'Deployed to GitHub Pages. The API is a separate deployment, so until it is running the interface reports itself as unconnected rather than showing invented figures. The repository is the better evidence.',
         },
         {
           label: 'Read the paper',
@@ -222,10 +222,17 @@ export const projects = {
       facts: [
         { label: 'Database', value: 'MySQL 8, no ORM' },
         { label: 'Safety rule', value: 'Refused in the transaction' },
-        { label: 'Tests', value: '148, against a real server' },
+        { label: 'Tests', value: '148, 69 need no setup' },
         { label: 'Double counting', value: 'Blocked by the schema' },
       ],
-      note: 'Open endpoints and no authentication, which the interface states on its own about page. Do not put real data in it.',
+      /**
+       * The repository is the proof, so the card says so plainly rather than
+       * apologising for the API not being deployed. 69 of the 148 tests run from
+       * a fresh clone with no install and no database, which is a stronger claim
+       * than a screenshot of a working demo would be: anybody can check it in ten
+       * seconds instead of taking it on trust.
+       */
+      note: 'Clone it and run npm run test:domain. No install, no database, 69 tests covering the safety refusals, the routing rules and the impact accounting. The API is a separate deployment, and the interface says so rather than faking data.',
     },
   ],
 };
