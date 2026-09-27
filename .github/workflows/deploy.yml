@@ -54,6 +54,13 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # Surfaced so the verify job can reach the live URL. A step output only exists
+    # inside the job that defines it, so another job has to read it through
+    # needs.<job>.outputs. Referring to steps.deployment.outputs from the verify
+    # job silently expands to an empty string, and curl then fails with a
+    # malformed URL that reads like a network fault rather than a wiring mistake.
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
@@ -75,7 +82,7 @@ jobs:
 
       - name: The deployed page is the real document
         run: |
-          url="${{ steps.deployment.outputs.page_url }}"
+          url="${{ needs.deploy.outputs.page_url }}"
           echo "checking $url"
           html=$(curl -fsSL --retry 5 --retry-delay 10 "$url")
           echo "$html" | grep -q 'id="root"' || { echo "::error::no #root in the deployed page"; exit 1; }
@@ -85,7 +92,7 @@ jobs:
 
       - name: Every asset the page references resolves
         run: |
-          url="${{ steps.deployment.outputs.page_url }}"
+          url="${{ needs.deploy.outputs.page_url }}"
           for asset in $(curl -fsSL "$url" | grep -oE '(src|href)="/[^"]+\.(js|css)"' | sed -E 's/.*"([^"]+)"/\1/'); do
             code=$(curl -s -o /dev/null -w '%{http_code}' "$url$asset")
             if [ "$code" != "200" ]; then
