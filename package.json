@@ -1,0 +1,12 @@
+{
+  "name": "manideep-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio site for Manideep Daram. Static build deployed to GitHub Pages.",
+  "scripts": {
+    "dev": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "test": "node --test --test-reporter=spec \"client/src/**/*.test.js\"",
+    "preview": "npm --prefix client run preview"
+  }
+}
