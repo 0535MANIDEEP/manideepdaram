@@ -64,14 +64,14 @@ export const projectFlows = {
   foodforward: {
     caption: 'How the platform works',
     steps: [
-      { icon: 'storefront', label: 'Surplus is reported', detail: 'Events and restaurants log what is left' },
-      { icon: 'path', label: 'Routing is computed', detail: 'Nearest shelter hub picked for the load' },
-      { icon: 'usersThree', label: 'Hub is notified', detail: 'Collection window and quantity agreed' },
-      { icon: 'chartLine', label: 'Impact is recorded', detail: 'Meals redirected tracked per collection' },
+      { icon: 'storefront', label: 'Surplus is listed', detail: 'Weight, category, pickup window, and the safe-until time or its absence' },
+      { icon: 'x', label: 'Safety check refuses it', detail: 'No expiry recorded, or already past, never reaches a hub' },
+      { icon: 'path', label: 'Routing is computed', detail: 'Nearest hub with room, open hours, and matching category' },
+      { icon: 'chartLine', label: 'Handover is recorded', detail: 'Counted once, from the collection rather than the listing' },
     ],
     citation: {
-      journal: 'JETIR',
-      detail: 'Vol. 11, Issue 4, April 2024',
+      journal: 'International Journal of Emerging Technologies and Innovative Research',
+      detail: 'Vol. 11, Issue 4, pp. f645-f647, April 2024',
       id: 'JETIR2404570',
     },
   },
@@ -101,12 +101,12 @@ export const about = {
   heading: 'A graduate who ships, not just studies',
   body: [
     'I am a 2024 Computer Science graduate from Vidya Jyothi Institute of Technology in Hyderabad, now looking for a Software Engineer role.',
-    'Most of my work has been end to end. The Android Blood Bank app handled donor matching, location alerts and blood bank communication in one native build. FoodForward was a full stack platform for redirecting surplus food, and the research behind it became a published JETIR paper.',
+    'Most of my work has been end to end. The Android Blood Bank app handled donor matching, location alerts and blood bank communication in one native build. FoodForward routes surplus food to shelter hubs and refuses anything unsafe to send, and the research behind it became a published JETIR paper.',
     'I work in Java, JavaScript and Python, and I am comfortable across the stack rather than locked to one layer.',
   ],
   strengths: [
-    { label: 'Backend and APIs', detail: 'REST services in Node and Express, SQL and MongoDB' },
-    { label: 'Android', detail: 'Native Java apps with Firebase and Google Maps' },
+    { label: 'Backend and APIs', detail: 'REST services in Node and Express, relational schema design in MySQL' },
+    { label: 'Android', detail: 'Native Java apps with SQLite and Google Maps' },
     { label: 'Research', detail: 'Co-author on a UGC approved JETIR publication' },
     { label: 'Practice', detail: 'Agile delivery, code review, Git branching' },
   ],
@@ -141,7 +141,7 @@ export const skills = {
     },
     {
       name: 'Data and Systems',
-      items: ['DBMS', 'SQLite', 'Firebase', 'MongoDB', 'MySQL'],
+      items: ['DBMS', 'MySQL', 'Schema design', 'SQLite', 'Firebase'],
     },
     {
       name: 'Engineering and Tools',
@@ -170,24 +170,59 @@ export const projects = {
       id: 'foodforward',
       title: 'FoodForward',
       kicker: 'Published research, built in full',
-      body: 'A full stack platform that redirects surplus food from events and restaurants to nearby shelter hubs, with routing logic and impact tracking. The research became a JETIR paper.',
-      stack: ['React.js', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'REST APIs'],
-      links: [],
-      note: 'Source available on request.',
+      body: 'A platform that routes surplus food from restaurants and events to nearby shelter hubs, and refuses anything unsafe to send. A listing with no safe-until time, or one already past it, is rejected inside the assignment transaction rather than flagged and routed anyway, so no code path can produce a valid assignment for food that could make somebody ill. The research behind it became a JETIR paper.',
+      /**
+       * MySQL, not MongoDB.
+       *
+       * The earlier list claimed MongoDB, which contradicts the published paper:
+       * the JETIR abstract names MySQL. The paper is the source of truth for a
+       * published claim, so the stack follows it. React and Tailwind are the
+       * interface, rebuilt after the 2024 prototype, and the MySQL schema and
+       * routing rules are the paper's.
+       */
+      stack: ['Node.js', 'Express', 'MySQL', 'React.js', 'Tailwind CSS', 'REST APIs'],
+      links: [
+        { label: 'Live interface', href: 'https://0535manideep.github.io/foodforward/', external: true, primary: true },
+        { label: 'Source', href: 'https://github.com/0535MANIDEEP/foodforward', external: true },
+        { label: 'The paper', href: 'https://www.jetir.org/papers/JETIR2404570.pdf', external: true },
+      ],
+      note: '148 automated tests, run against a real MySQL server. The interface is deployed to GitHub Pages; the API deploys separately, see render.yaml in the repository.',
     },
   ],
 };
 
+/**
+ * The published paper, as it actually appears.
+ *
+ * Two things here were wrong before and are now corrected against the PDF at
+ * http://www.jetir.org/papers/JETIR2404570.pdf, which returns HTTP 200 and
+ * 1,010,538 bytes of application/pdf:
+ *
+ *   - the journal name was missing "International". The full title is
+ *     "International Journal of Emerging Technologies and Innovative Research".
+ *   - the ISSN read 2349-5162. It is 2349-9162.
+ *
+ * A wrong ISSN on a published citation is the kind of error that makes a real
+ * publication look fabricated, which is the opposite of what this section is for.
+ * Page range uses a hyphen rather than an en-dash to keep the site's own rule
+ * against dashes in user-visible strings.
+ *
+ * The link is https, not http. Both resolve and both return the same 1,010,538
+ * byte PDF, but a portfolio should not hand a reader a plaintext link when the
+ * publisher serves TLS.
+ */
 export const research = {
   heading: 'Research',
-  paperTitle: 'Foodforward: An Initiative To Reduce Food Wastage',
-  journal: 'Journal of Emerging Technologies and Innovative Research',
+  paperTitle: 'FoodForward: An Initiative to Reduce Food Wastage',
+  journal: 'International Journal of Emerging Technologies and Innovative Research',
   approval: 'UGC Approved',
-  volumeIssue: 'Vol. 11, Issue 4, April 2024',
-  issn: 'ISSN 2349-5162',
+  volumeIssue: 'Vol. 11, Issue 4, pp. f645-f647, April 2024',
+  issn: 'ISSN 2349-9162',
   paperId: 'JETIR2404570',
+  paperUrl: 'https://www.jetir.org/papers/JETIR2404570.pdf',
   role: 'Co-author and core researcher',
-  body: 'Research and implementation of a platform to move surplus food from commercial sources to people who need it, reducing waste at the point of generation rather than after it.',
+  authors: 'RVN Vijayanand, D Manideep, B Mohari, D Pramod, K. Spandana Kumari',
+  body: 'Research and implementation of a platform to move surplus food from commercial sources to people who need it, reducing waste at the point of generation rather than after it. The prototype was built in HTML, CSS, JavaScript, Node.js and MySQL.',
 };
 
 export const milestones = {
@@ -207,7 +242,7 @@ export const milestones = {
     },
     {
       title: 'Two projects shipped end to end',
-      detail: 'A native Android app and a deployed full stack platform, both built solo.',
+      detail: 'A native Android app, and a surplus food routing platform with a live interface, a deployable API and 148 automated tests.',
     },
   ],
 };

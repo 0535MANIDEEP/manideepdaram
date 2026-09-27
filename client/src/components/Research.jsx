@@ -59,7 +59,25 @@ export function Research() {
                     <DataLabel>Contribution</DataLabel>
                     <p className="mt-1.5 text-sm text-primary">{research.role}</p>
                   </div>
+                  <div className="sm:col-span-2">
+                    <DataLabel>Authors</DataLabel>
+                    <p className="mt-1.5 text-sm leading-relaxed text-primary">{research.authors}</p>
+                  </div>
                 </div>
+
+                {/* The paper itself, so the claim is checkable rather than
+                    asserted. Everything in this card can be verified against
+                    the PDF, including the page range and the ISSN. */}
+                <a
+                  href={research.paperUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  data-testid="research-paper-link"
+                  className="mt-8 inline-flex items-center gap-2 rounded-pill border border-line-strong px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-200 hover:border-accent-40 hover:bg-accent-12"
+                >
+                  Read the paper
+                  <Icon name="arrowUpRight" size={15} weight="bold" />
+                </a>
               </div>
             </div>
           </article>

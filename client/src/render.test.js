@@ -6,7 +6,7 @@ import { createServer } from 'vite';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { projects, projectFlows } from './data/content.js';
+import { projects, projectFlows, research } from './data/content.js';
 
 /**
  * The site has to actually render.
@@ -100,32 +100,62 @@ describe('every project renders with a diagram and working links', () => {
   test('every project link is a real absolute https URL', () => {
     // A relative or placeholder href in a portfolio is a dead CTA, and it looks
     // identical to a working one in the source.
+    //
+    // The domain list is an allowlist of places a project link may legitimately
+    // point: his own repositories, the Pages site built from one of them, and the
+    // journal that published the paper. jetir.org was added when the FoodForward
+    // card linked to the actual PDF, which returns HTTP 200 and 1,010,538 bytes
+    // of application/pdf. It is a named publisher rather than a wildcard, so a
+    // link to some random host still fails.
+    const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|www\.jetir\.org)\//;
+
     for (const project of projects.items) {
       for (const link of project.links ?? []) {
         assert.match(
           link.href,
-          /^https:\/\/(github\.com|0535manideep\.github\.io)\//,
+          ALLOWED,
           `project ${project.id} link "${link.label}" is not a real absolute URL: ${link.href}`,
         );
       }
     }
   });
 
-  test('every linked repository actually exists in the link set', () => {
-    // Each project claims at most one repository, and the Source link must agree
-    // with the Download link, so a card cannot point a reader at a repo that
-    // does not contain the thing being described.
+  test('every other project link belongs to the same project as its source repo', () => {
+    // Each project claims at most one repository. Every other link on the card
+    // has to be traceable to that same project, so a card cannot point a reader
+    // at a repo that does not contain the thing being described.
+    //
+    // "Under the repo" is not the whole rule any more. A download sits under the
+    // repository's releases, but a deployed interface sits on Pages for that
+    // repository and the paper sits with the publisher. Both are tied to the
+    // project by name, which is the actual requirement, so the repository name
+    // is checked rather than the URL prefix.
     for (const project of projects.items) {
       const links = project.links ?? [];
       const sources = links.filter((l) => /Source/i.test(l.label));
       if (sources.length === 0) continue;
       assert.equal(sources.length, 1, `project ${project.id} has ${sources.length} source links`);
+
       const repoUrl = sources[0].href.replace(/\/$/, '');
+      // foodforward, blood-bank-android
+      const repoName = repoUrl.split('/').filter(Boolean).pop();
+
       for (const other of links) {
         if (other === sources[0]) continue;
+
+        const underRepo = other.href.startsWith(repoUrl);
+        // A Pages site for this repository: .../foodforward/ for
+        // .../0535MANIDEEP/foodforward. Case differs between the two, so this
+        // compares lowercased.
+        const pagesForRepo =
+          other.href.toLowerCase().includes('0535manideep.github.io/') &&
+          other.href.toLowerCase().includes('/' + repoName.toLowerCase() + '/');
+        // The published paper, which is this project's own research output.
+        const isPublishedPaper = other.href === research.paperUrl;
+
         assert.ok(
-          other.href.startsWith(repoUrl),
-          `project ${project.id} download link ${other.href} is not under its source repo ${repoUrl}`,
+          underRepo || pagesForRepo || isPublishedPaper,
+          `project ${project.id} link ${other.href} is not traceable to its source repo ${repoUrl}`,
         );
       }
     }

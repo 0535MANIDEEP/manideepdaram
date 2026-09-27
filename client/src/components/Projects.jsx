@@ -14,12 +14,15 @@ import { ProjectFlow } from './ProjectFlow.jsx';
  * skill 4.7 requires exactly as many bento cells as there are items. There are
  * two projects, so there are two cells and no filler tile.
  *
- * Both cells now carry a real diagram instead of stock photography, which
- * satisfies the background-diversity rule with information rather than
- * decoration.
+ * Both cells carry a real diagram instead of stock photography, which satisfies
+ * the background-diversity rule with information rather than decoration.
  *
- * There are deliberately no repository links: none were supplied, and inventing
- * plausible URLs would be a fabrication. (skill 9.D)
+ * Every link is live. This card previously carried no links at all, on the
+ * grounds that none had been supplied and inventing plausible URLs would be a
+ * fabrication. That was the right call then and both projects are published now,
+ * so the links are real: a downloadable APK, a public repository, a deployed
+ * interface and the paper PDF. Each one resolves, and the deploy workflow checks
+ * the interface actually serves the application rather than a 404 page.
  */
 const SPANS = ['lg:col-span-7', 'lg:col-span-5'];
 
