@@ -258,12 +258,20 @@ export const footer = {
   ],
 };
 
+/**
+ * Primary navigation.
+ *
+ * Five items, not seven. Education and Milestones are still real sections and
+ * are still reachable by scrolling, but seven links plus the brand do not fit on
+ * one line at 1024px. They wrapped onto two rows inside a 72px bar, which is the
+ * other half of the header problem. A test asserts a single row at every desktop
+ * width, so adding an item without checking that fails the build rather than
+ * shipping a broken header.
+ */
 export const nav = [
   { label: 'About', target: '#about', testId: 'nav-link-about' },
-  { label: 'Education', target: '#education', testId: 'nav-link-education' },
   { label: 'Skills', target: '#skills', testId: 'nav-link-skills' },
   { label: 'Projects', target: '#projects', testId: 'nav-link-projects' },
   { label: 'Research', target: '#research', testId: 'nav-link-research' },
-  { label: 'Milestones', target: '#milestones', testId: 'nav-link-achievements' },
   { label: 'Request Resume', target: '#contact', testId: 'nav-link-contact', cta: true },
 ];

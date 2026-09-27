@@ -4,8 +4,6 @@ import { List, X } from './icons.jsx';
 import { Monogram } from './Monogram.jsx';
 import { nav, identity } from '../data/content.js';
 
-const DESKTOP_FROM = 'lg'; // 1024px, per skill 4.7
-
 export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -36,14 +34,16 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 h-[72px] border-b backdrop-blur-md transition-colors duration-300 ${
-        scrolled ? 'border-accent-20 bg-ink/85' : 'border-accent-20 bg-ink/85'
+        scrolled
+          ? 'border-line-strong bg-ink/92 shadow-[0_1px_0_0_rgba(255,255,255,0.04)]'
+          : 'border-transparent bg-ink/45'
       }`}
     >
       <div className="container-page flex h-full items-center justify-between gap-6">
         <a
           href="#top"
           data-testid="nav-brand-logo"
-          className="flex shrink-0 items-center gap-3"
+          className="flex min-w-0 shrink items-center gap-3"
         >
           <Monogram size={34} />
           {/* Always visible, not hidden below sm. When this was hidden on
@@ -56,14 +56,14 @@ export function Header() {
         </a>
 
         {/* Desktop: must stay on one line and under 80px tall. */}
-        <nav className={`hidden ${DESKTOP_FROM}:flex items-center gap-5`} aria-label="Primary">
+        <nav className={`hidden lg:flex lg:flex-nowrap items-center gap-4 xl:gap-5`} aria-label="Primary">
           {nav.map((item) =>
             item.cta ? (
               <a
                 key={item.label}
                 href={item.target}
                 data-testid={item.testId}
-                className="rounded-pill border border-accent-40 bg-accent-12 px-4 py-2 text-sm font-semibold text-accent transition-colors duration-200 hover:border-accent hover:bg-accent-20 active:translate-y-[1px]"
+                className="whitespace-nowrap rounded-pill border border-accent-40 bg-accent-12 px-4 py-2 text-sm font-semibold text-accent transition-colors duration-200 hover:border-accent hover:bg-accent-20 active:translate-y-[1px]"
               >
                 {item.label}
               </a>
@@ -72,7 +72,7 @@ export function Header() {
                 key={item.label}
                 href={item.target}
                 data-testid={item.testId}
-                className="text-sm font-medium text-secondary transition-colors duration-200 hover:text-primary"
+                className="whitespace-nowrap text-sm font-medium text-secondary transition-colors duration-200 hover:text-primary"
               >
                 {item.label}
               </a>
@@ -87,7 +87,7 @@ export function Header() {
           aria-controls="mobile-nav"
           aria-label={open ? 'Close menu' : 'Open menu'}
           data-testid="nav-toggle"
-          className={`${DESKTOP_FROM}:hidden flex h-10 w-10 items-center justify-center rounded-surface border border-line text-primary transition-colors hover:border-accent-40 active:translate-y-[1px]`}
+          className={`lg:hidden flex h-10 w-10 items-center justify-center rounded-surface border border-line text-primary transition-colors hover:border-accent-40 active:translate-y-[1px]`}
         >
           {open ? <X size={20} /> : <List size={20} />}
         </button>
