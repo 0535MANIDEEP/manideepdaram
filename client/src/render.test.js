@@ -6,7 +6,7 @@ import { createServer } from 'vite';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { projects, projectFlows } from './data/content.js';
+import { projects, projectFlows, research } from './data/content.js';
 import * as content from './data/content.js';
 
 /**
@@ -68,8 +68,8 @@ before(async () => {
 
   // The projects section on its own, so assertions about a card are scoped to the
   // card. Checking the whole page instead produced a false failure, because the
-  // research section links the same paper PDF the FoodForward detail page offers,
-  // and that link is supposed to be there.
+  // the research section links the paper PDF, and that link is supposed
+  // to be there.
   const projectsMod = await vite.ssrLoadModule('/src/components/Projects.jsx');
   projectsHtml = renderToString(createElement(projectsMod.Projects, { onOpen: noop }));
 });
@@ -135,11 +135,9 @@ describe('every project renders with a diagram and working links', () => {
     // The domain list is an allowlist of places a project link may legitimately
     // point: his own repositories, the Pages site built from one of them, the
     // journal that published the paper, and the Vercel team the deploys live
-    // on. jetir.org was added when the FoodForward card linked to the actual PDF,
+    // on. jetir.org was added when the research section links to the actual PDF,
     // which returns HTTP 200 and 1,010,538 bytes of application/pdf.
-    // jetir.org is not on this list on purpose: the research section was taken
-  // down, so no link on the site is allowed to point at the publisher.
-  const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|[\w-]+\.vercel\.app)\/?/;
+    const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|www\.jetir\.org|[\w-]+\.vercel\.app)\/?/;
 
     for (const project of projects.items) {
       for (const link of [
@@ -180,20 +178,21 @@ describe('every project renders with a diagram and working links', () => {
       // name. That is looser than the prefix match but tighter than a host
       // allow-list: a link to some unrelated Vercel project fails this test,
       // which is what it is here for.
+      const isPublishedPaper = (href) => href === research.paperUrl;
       const vercelForRepo = (href) =>
         /^https:\/\/[\w-]+\.vercel\.app/.test(href) &&
         href.toLowerCase().includes(repoName.toLowerCase());
   
       for (const action of project.actions) {
         assert.ok(
-          underRepo(action.href) || pagesForRepo(action.href) || vercelForRepo(action.href),
+          underRepo(action.href) || pagesForRepo(action.href) || isPublishedPaper(action.href) || vercelForRepo(action.href),
           `project ${project.id} action ${action.href} is not traceable to its repository ${repoUrl}`,
         );
       }
 
       if (project.live) {
         assert.ok(
-          pagesForRepo(project.live.href) || vercelForRepo(project.live.href),
+          pagesForRepo(project.live.href) || isPublishedPaper(project.live.href) || vercelForRepo(project.live.href),
           `project ${project.id} live link ${project.live.href} is not traceable to its repository ${repoUrl}`,
         );
       }

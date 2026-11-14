@@ -259,6 +259,43 @@ export const projects = {
   ],
 };
 
+/**
+ * The published paper, as it actually appears.
+ *
+ * Two things here were wrong before and are now corrected against the PDF at
+ * http://www.jetir.org/papers/JETIR2404570.pdf, which returns HTTP 200 and
+ * 1,010,538 bytes of application/pdf:
+ *
+ *   - the journal name was missing "International". The full title is
+ *     "International Journal of Emerging Technologies and Innovative Research".
+ *   - The ISSN read 2349-5162. It is 2349-9162.
+ *
+ * A wrong ISSN on a published citation is the kind of error that makes a real
+ * publication look fabricated, which is the opposite of what this section is for.
+ * Page range uses a hyphen rather than an en-dash to keep the site's own rule
+ * against dashes in user-visible strings.
+ *
+ * The link is https, not http. Both resolve and both return the same 1,010,538
+ * byte PDF, but a portfolio should not hand a reader a plaintext link when the
+ * publisher serves TLS.
+ *
+ * The FoodForward project itself is not on this site. The paper is a
+ * different claim, and it stands on its own.
+ */
+export const research = {
+  heading: 'Publication',
+  paperTitle: 'FoodForward: An Initiative to Reduce Food Wastage',
+  journal: 'International Journal of Emerging Technologies and Innovative Research',
+  approval: 'UGC Approved',
+  volumeIssue: 'Vol. 11, Issue 4, pp. f645-f647, April 2024',
+  issn: 'ISSN 2349-9162',
+  paperId: 'JETIR2404570',
+  paperUrl: 'https://www.jetir.org/papers/JETIR2404570.pdf',
+  role: 'Co-author and core researcher',
+  authors: 'RVN Vijayanand, D Manideep, B Mohari, D Pramod, K. Spandana Kumari',
+  body: 'Research and implementation of a platform to move surplus food from commercial sources to people who need it, reducing waste at the point of generation rather than after it. The prototype was built in HTML, CSS, JavaScript, Node.js and MySQL.',
+};
+
 export const milestones = {
   heading: 'Milestones I am proud of',
   items: [
@@ -345,5 +382,6 @@ export const nav = [
   { label: 'Skills', target: '#skills', testId: 'nav-link-skills' },
   { label: 'Experience', target: '#experience', testId: 'nav-link-experience' },
   { label: 'Projects', target: '#projects', testId: 'nav-link-projects' },
+  { label: 'Publication', target: '#research', testId: 'nav-link-research' },
   { label: 'Request Resume', target: '#contact', testId: 'nav-link-contact', cta: true },
 ];
