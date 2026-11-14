@@ -11,7 +11,6 @@ import { Experience } from './components/Experience.jsx';
 import { Skills } from './components/Skills.jsx';
 import { Projects } from './components/Projects.jsx';
 import { ProjectDetail } from './components/ProjectDetail.jsx';
-import { Research } from './components/Research.jsx';
 import { Milestones } from './components/Milestones.jsx';
 import { Contact } from './components/Contact.jsx';
 import { Footer } from './components/Footer.jsx';
@@ -79,7 +78,6 @@ export default function App() {
         <Education />
         <Skills />
         <Projects onOpen={open} />
-        <Research />
         <Milestones />
         <Contact />
       </main>
