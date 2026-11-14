@@ -86,9 +86,19 @@ describe('the app renders', () => {
   });
 
   test('every section is present', () => {
-    for (const id of ['hero', 'about', 'projects', 'skills', 'education', 'contact']) {
+    // "projects" is not in this list because the section is switched off on
+    // purpose. The next projects are the ones worth showing, and until they are
+    // live a section headed "Selected work" with one entry in it reads worse
+    // than no section at all. Add "projects" back here in the same commit that
+    // renders <Projects /> again.
+    for (const id of ['hero', 'about', 'experience', 'skills', 'education', 'contact']) {
       assert.ok(html.includes(`id="${id}"`), `section #${id} is missing from the render`);
     }
+  });
+
+  test('the projects section is deliberately switched off', () => {
+    // Stated so that the switch back on is a decision rather than a drift.
+    assert.ok(!html.includes('id="projects"'), 'the projects section is back on the page');
   });
 
   test('the page carries a real title and description', () => {
@@ -201,10 +211,16 @@ describe('every project renders with a diagram and working links', () => {
   });
 
   test('a project that has a live site offers it on the detail page', () => {
-    const food = projects.items.find((p) => p.id === 'foodforward');
-    const demo = food.actions.find((a) => a.kind === 'demo');
-    assert.ok(demo, 'FoodForward has a deployed interface but does not link it');
-    assert.equal(demo.href, 'https://0535manideep.github.io/foodforward/');
+    // Generic on purpose. This used to name FoodForward, and it passed for as
+    // long as that one project was in the list. The project was taken off the
+    // site, the test was not, and it failed on a null lookup rather than on
+    // anything to do with links. Checking every project that claims a live
+    // site means the next one is covered by the same rule.
+    for (const project of projects.items) {
+      const demo = project.actions.find((a) => a.kind === 'demo');
+      if (!demo) continue;
+      assert.ok(demo.href.startsWith('https://'), `${project.id} has a live site with no absolute URL`);
+    }
   });
 
   test('no project claims a technology it did not use', () => {
@@ -422,7 +438,7 @@ describe('a nested scroller is exempted from the smooth scroll layer', () => {
 
   test('the detail panel carries data-lenis-prevent', () => {
     const detail = renderToString(
-      createElement(ProjectDetail, { projectId: 'foodforward', onClose: noop }),
+      createElement(ProjectDetail, { projectId: 'android-blood-bank', onClose: noop }),
     );
     assert.ok(
       /data-lenis-prevent/.test(detail),
@@ -435,7 +451,7 @@ describe('a nested scroller is exempted from the smooth scroll layer', () => {
     // would be harmless and this test would still pass while the original bug
     // came back through a different route.
     const detail = renderToString(
-      createElement(ProjectDetail, { projectId: 'foodforward', onClose: noop }),
+      createElement(ProjectDetail, { projectId: 'android-blood-bank', onClose: noop }),
     );
     assert.ok(/overflow-y-auto/.test(detail), 'the detail panel is no longer the scroll container');
     assert.ok(/min-h-0/.test(detail), 'without min-h-0 the flex child cannot shrink, so it cannot scroll');
@@ -467,6 +483,62 @@ describe('the project detail page', () => {  for (const project of projects.item
       createElement(ProjectDetail, { projectId: 'does-not-exist', onClose: noop }),
     );
     assert.equal(detail, '');
+  });
+});
+
+describe('the internship carries the site while the project section is off', () => {
+  // The projects section is switched off until the next projects are live, so
+  // the experience entry is the only work on the page. It has to be complete
+  // and it has to be checkable, which is why the access control bullet
+  // carries a public build beside it.
+  const experience = content.experience;
+
+  test('the experience section is on the page', () => {
+    assert.ok(html.includes('id="experience"'), 'the experience section is not rendered');
+  });
+
+  test('the internship is named with its dates and its role', () => {
+    const internship = experience.entries.find((e) => e.id === 'crystalline');
+    assert.ok(internship, 'the internship entry is missing');
+    assert.match(internship.company, /Crystalline/i);
+    assert.match(internship.role, /Frontend/i);
+    assert.match(internship.period, /Dec 2023/);
+    assert.match(internship.period, /Jun 2024/);
+    assert.ok(internship.bullets.length >= 4, 'the internship entry is thin');
+  });
+
+  test('the access control bullet carries a public build beside it', () => {
+    const internship = experience.entries.find((e) => e.id === 'crystalline');
+    const bullet = internship.bullets.find((b) => /access control/i.test(b.label));
+
+    assert.ok(bullet, 'no bullet claims access control');
+    assert.ok(bullet.proof, 'the access control bullet carries no public proof');
+    assert.match(bullet.proof.href, /^https:\/\/github\.com\//);
+    assert.match(bullet.proof.live, /^https:\/\//);
+  });
+
+  test('the proof links are real and resolvable on the page', () => {
+    const internship = experience.entries.find((e) => e.id === 'crystalline');
+    const bullet = internship.bullets.find((b) => /access control/i.test(b.label));
+
+    assert.ok(
+      html.includes(`href="${bullet.proof.href}"`),
+      'the public build is not linked from the page',
+    );
+    assert.ok(
+      html.includes(`href="${bullet.proof.live}"`),
+      'the live demo is not linked from the page',
+    );
+  });
+
+  test('the role and the three links are at the top of the page', () => {
+    assert.ok(html.includes(content.identity.role), 'the role is not on the page');
+    for (const stack of content.identity.roleStack) {
+      assert.ok(html.includes(stack), `the stack does not mention ${stack}`);
+    }
+    assert.ok(html.includes(`href="${content.identity.github}"`), 'GitHub is not linked');
+    assert.ok(html.includes(`href="${content.identity.linkedin}"`), 'LinkedIn is not linked');
+    assert.ok(html.includes(`mailto:${content.identity.email}`), 'the email is not linked');
   });
 });
 
