@@ -189,10 +189,11 @@ export const skills = {
     },
     {
       name: 'Data and Systems',
-      // Firebase came off this list for the same reason MongoDB did. Nothing
-      // in the two shipped projects uses it, and neither one is sending data
-      // to a cloud database on the far side of the ocean.
-      items: ['DBMS', 'MySQL', 'Schema design', 'JDBC'],
+      // MongoDB is back on this list: used through the internship team's
+      // API and data model, confirmed as stack exposure. Still nothing in
+      // the two shipped projects uses it, so it is not presented as their
+      // stack either.
+      items: ['DBMS', 'MySQL', 'Schema design', 'JDBC', 'MongoDB (via team API)'],
     },
     {
       name: 'Engineering and Tools',
