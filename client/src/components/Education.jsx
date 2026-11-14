@@ -1,7 +1,6 @@
 import { education } from '../data/content.js';
 import { SectionHeading, DataLabel } from './SectionHeading.jsx';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
-import { Icon } from './icons.jsx';
 
 /**
  * Layout family: a single vertical spine with coursework as inline chips.
@@ -52,8 +51,6 @@ export function Education() {
                     </li>
                   ))}
                 </ul>
-              </div>
-
               </div>
             </div>
           </RevealItem>
