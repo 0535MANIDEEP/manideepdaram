@@ -97,7 +97,7 @@ export const metrics = [
 
 /** Exactly ONE marquee on the page (SS 5). No locale strip inside it (SS 9.F). */
 export const marqueeItems = [
-  'DATA STRUCTURES & ALGORITHMS',
+  'POSTGRESQL & JWT',
   'DBMS & SQL',
   'FULL STACK WEB',
   'PUBLISHED RESEARCHER',
@@ -112,11 +112,11 @@ export const about = {
   body: [
     'I am a 2024 Computer Science graduate from Vidya Jyothi Institute of Technology in Hyderabad, now looking for a Software Engineer role.',
     'Seven of those months were spent inside a team, building forms, screens, tabs and navigation for a production risk-management application in Vue.js, and then integrating the REST endpoints behind it. The research behind one of my own projects became a published JETIR paper.',
-    'I work in Java, JavaScript, TypeScript and Python, and I am comfortable across the stack rather than locked to one layer.',
+    'I work in Java, JavaScript and TypeScript, and I am comfortable across the stack rather than locked to one layer.',
   ],
   strengths: [
     { label: 'Interfaces', detail: 'Vue.js, React.js and TypeScript, with validated forms and the loading, empty and error states that go with them' },
-    { label: 'Backend and APIs', detail: 'REST services in Node and Express, relational schema design in MySQL' },
+    { label: 'Backend and APIs', detail: 'REST services in Node and Express, relational schema design in MySQL and PostgreSQL' },
     { label: 'Access control', detail: 'Role based permissions enforced by the API, not only hidden in the interface' },
     { label: 'Practice', detail: 'Agile delivery, code review, Git branching, and CI on every push' },
   ],
@@ -266,7 +266,7 @@ export const projects = {
       facts: [
         { label: 'Roles', value: 'Admin, reviewer, viewer' },
         { label: 'Permissions', value: 'Five, one per action' },
-        { label: 'Tests', value: '44, in CI on every push' },
+        { label: 'Tests', value: '15, in CI on every push' },
         { label: 'The point', value: 'The server refuses, not the interface' },
       ],
       note: 'The same five permissions the interface reads, in the route handlers. The button on the detail page asks the API what it would decide, so the refusal can be seen rather than described.',
