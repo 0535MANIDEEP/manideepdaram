@@ -193,7 +193,7 @@ export const skills = {
   categories: [
     {
       name: 'Programming',
-      items: ['Java', 'Python', 'JavaScript', 'TypeScript', 'SQL'],
+      items: ['Java', 'JavaScript', 'TypeScript', 'SQL'],
     },
     {
       name: 'Web and Core CS',
