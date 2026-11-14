@@ -54,10 +54,7 @@ export function Education() {
                 </ul>
               </div>
 
-              <p className="mt-8 flex items-center gap-2.5 text-sm text-muted">
-                <Icon name="graduationCap" size={18} className="text-accent-70" />
-                Final year project exhibited as the Android Blood Bank Management App.
-              </p>
+              </div>
             </div>
           </RevealItem>
         </RevealGroup>

@@ -46,9 +46,9 @@ export const images = {
  * Project visuals.
  *
  * There are no stock photographs here on purpose. A picture of somebody else's
- * desk says nothing about a blood bank app, and generic imagery is exactly the
- * filler this site should not contain. Each project is represented by a diagram
- * of how it actually works, drawn only from the real project descriptions.
+ * desk says nothing about an app, and generic imagery is exactly the filler
+ * this site should not contain. Each project is represented by a diagram of
+ * how it actually works, drawn only from the real project descriptions.
  */
 export const projectFlows = {
   taskflow: {
@@ -71,27 +71,13 @@ export const projectFlows = {
       { icon: 'list', label: 'The button proves it', detail: 'The detail page asks the API what it would decide, so the refusal can be watched' },
     ],
   },
-  'android-blood-bank': {
-    caption: 'How the app works',
-    // Every step here was checked against the source in blood-bank-android. The
-    // previous version claimed a chat thread and real time stock updates, and
-    // neither exists: there is no messaging code, no Firebase, and the manifest
-    // has no INTERNET permission, so nothing could be real time. Two features
-    // that were never built had been described as if they had.
-    steps: [
-      { icon: 'userPlus', label: 'Donor registers', detail: 'Blood group, phone and city, stored in SQLite on the device' },
-      { icon: 'drop', label: 'Request is raised', detail: 'A hospital asks for units of a group and gives its location' },
-      { icon: 'mapPin', label: 'Donors are matched', detail: 'Compatible groups only, ranked nearest first from the hospital' },
-      { icon: 'list', label: 'Stock is listed', detail: 'Blood bank units held locally, and a tap opens the dialer pre-filled' },
-    ],
-  },
 };
 
 /** Metrics band sits directly under the hero, never inside it (SS 4.7). */
 export const metrics = [
   { value: '8.53', label: 'B.Tech CGPA', sub: 'out of 10.0' },
   { value: '7 months', label: 'Frontend internship', sub: 'Dec 2023 to Jun 2024' },
-  { value: '3', label: 'Shipped projects', sub: 'Live on free tiers' },
+  { value: '2', label: 'Shipped projects', sub: 'Live on free tiers' },
   { value: '2024', label: 'Graduate', sub: 'Vidya Jyothi Institute' },
 ];
 
@@ -100,7 +86,6 @@ export const marqueeItems = [
   'POSTGRESQL & JWT',
   'DBMS & SQL',
   'FULL STACK WEB',
-  'PUBLISHED RESEARCHER',
   'REACT, VUE & TYPESCRIPT',
   'AGILE & SOFTWARE ENGINEERING',
   'ACCESS CONTROL IN THE API',
@@ -111,7 +96,7 @@ export const about = {
   heading: 'I care about the parts users end up trusting',
   body: [
     'I am a 2024 Computer Science graduate from Vidya Jyothi Institute of Technology in Hyderabad, now looking for a Software Engineer role.',
-    'Seven of those months were spent inside a team, building forms, screens, tabs and navigation for a production risk-management application in Vue.js, and then integrating the REST endpoints behind it. The research behind one of my own projects became a published JETIR paper.',
+    'Seven of those months were spent inside a team, building forms, screens, tabs and navigation for a production risk-management application in Vue.js, and then integrating the REST endpoints behind it.',
     'I mostly build the layer between the screen and the server, checking the parts that decide whether a request is allowed or refused.',
   ],
   strengths: [
@@ -204,14 +189,14 @@ export const skills = {
     },
     {
       name: 'Data and Systems',
-      // Firebase came off this list for the same reason MongoDB did. Nothing in
-      // either shipped project uses it, and the Android app's manifest has no
-      // INTERNET permission at all.
-      items: ['DBMS', 'MySQL', 'Schema design', 'SQLite', 'JDBC'],
+      // Firebase came off this list for the same reason MongoDB did. Nothing
+      // in the two shipped projects uses it, and neither one is sending data
+      // to a cloud database on the far side of the ocean.
+      items: ['DBMS', 'MySQL', 'Schema design', 'JDBC'],
     },
     {
       name: 'Engineering and Tools',
-      items: ['Agile', 'Git and GitHub', 'GitHub Actions', 'Android Studio', 'Data Structures', 'Computer Networks'],
+      items: ['Agile', 'Git and GitHub', 'GitHub Actions', 'Data Structures', 'Computer Networks'],
     },
   ],
 };
@@ -271,83 +256,15 @@ export const projects = {
       ],
       note: 'The same five permissions the interface reads, in the route handlers. The button on the detail page asks the API what it would decide, so the refusal can be seen rather than described.',
     },
-    {
-      id: 'android-blood-bank',
-      title: 'Android Blood Bank Management App',
-      kicker: 'Native Android',
-      result: 'A donor registers, a hospital asks for units, and the app returns compatible donors ranked by distance.',
-      body: 'A native Android application for blood bank stock and donor matching. Register donors with their blood group, raise a request for units from a hospital, and the app returns donors of compatible groups ranked by distance, with a tap to open the dialer pre-filled. Everything runs on the device.',
-      stack: ['Android Studio', 'Java', 'XML UI', 'SQLite', 'Material 3'],
-      repo: 'https://github.com/0535MANIDEEP/blood-bank-android',
-      live: null,
-      screenshot: { src: 'projects/blood-bank-android.png', alt: 'The Blood Bank app dashboard, with donors, requests and stock' },
-      actions: [
-        {
-          label: 'Download the APK',
-          href: 'https://github.com/0535MANIDEEP/blood-bank-android/releases/download/v1.0/BloodBank-v1.0.apk',
-          kind: 'download',
-          detail: 'Signed release build. Installs on Android 7.0 and newer, and runs fully offline with no account, no API keys and no INTERNET permission.',
-        },
-      ],
-      facts: [
-        { label: 'Platform', value: 'Android 7.0 and newer' },
-        { label: 'Language', value: 'Java, XML layouts' },
-        { label: 'Storage', value: 'SQLite, on device' },
-        { label: 'Network', value: 'None required' },
-      ],
-      note: 'Installs on Android 7.0 and newer. Runs fully offline, no account or API keys. The build above is the release asset, not a page describing one.',
-    },
   ],
-};
-
-/**
- * The published paper, as it actually appears.
- *
- * Two things here were wrong before and are now corrected against the PDF at
- * http://www.jetir.org/papers/JETIR2404570.pdf, which returns HTTP 200 and
- * 1,010,538 bytes of application/pdf:
- *
- *   - the journal name was missing "International". The full title is
- *     "International Journal of Emerging Technologies and Innovative Research".
- *   - The ISSN read 2349-5162. It is 2349-9162.
- *
- * A wrong ISSN on a published citation is the kind of error that makes a real
- * publication look fabricated, which is the opposite of what this section is for.
- * Page range uses a hyphen rather than an en-dash to keep the site's own rule
- * against dashes in user-visible strings.
- *
- * The link is https, not http. Both resolve and both return the same 1,010,538
- * byte PDF, but a portfolio should not hand a reader a plaintext link when the
- * publisher serves TLS.
- *
- * The project entry for this system was taken off the site when the section
- * was switched off, because the deployed interface never had its API behind
- * it. The paper is a different claim and it stands on its own.
- */
-export const research = {
-  heading: 'Publication',
-  paperTitle: 'FoodForward: An Initiative to Reduce Food Wastage',
-  journal: 'International Journal of Emerging Technologies and Innovative Research',
-  approval: 'UGC Approved',
-  volumeIssue: 'Vol. 11, Issue 4, pp. f645-f647, April 2024',
-  issn: 'ISSN 2349-9162',
-  paperId: 'JETIR2404570',
-  paperUrl: 'https://www.jetir.org/papers/JETIR2404570.pdf',
-  role: 'Co-author and core researcher',
-  authors: 'RVN Vijayanand, D Manideep, B Mohari, D Pramod, K. Spandana Kumari',
-  body: 'Research and implementation of a platform to move surplus food from commercial sources to people who need it, reducing waste at the point of generation rather than after it. The prototype was built in HTML, CSS, JavaScript, Node.js and MySQL.',
 };
 
 export const milestones = {
   heading: 'Milestones I am proud of',
   items: [
     {
-      title: 'Paper accepted to JETIR',
-      detail: 'Published in a UGC approved journal, April 2024.',
-    },
-    {
-      title: 'Mini-project exhibition',
-      detail: 'The Android Blood Bank app was presented at a college project exhibition.',
+      title: 'Two public full stack projects',
+      detail: 'TaskFlow and DocVault, both live on free tiers with public source and CI.',
     },
     {
       title: '8.53 CGPA',
@@ -424,6 +341,5 @@ export const nav = [
   { label: 'Skills', target: '#skills', testId: 'nav-link-skills' },
   { label: 'Experience', target: '#experience', testId: 'nav-link-experience' },
   { label: 'Projects', target: '#projects', testId: 'nav-link-projects' },
-  { label: 'Publication', target: '#research', testId: 'nav-link-research' },
   { label: 'Request Resume', target: '#contact', testId: 'nav-link-contact', cta: true },
 ];

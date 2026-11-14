@@ -6,7 +6,7 @@ import { createServer } from 'vite';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { projects, projectFlows, research } from './data/content.js';
+import { projects, projectFlows } from './data/content.js';
 import * as content from './data/content.js';
 
 /**
@@ -137,7 +137,9 @@ describe('every project renders with a diagram and working links', () => {
     // journal that published the paper, and the Vercel team the deploys live
     // on. jetir.org was added when the FoodForward card linked to the actual PDF,
     // which returns HTTP 200 and 1,010,538 bytes of application/pdf.
-    const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|www\.jetir\.org|[\w-]+\.vercel\.app)\/?/;
+    // jetir.org is not on this list on purpose: the research section was taken
+  // down, so no link on the site is allowed to point at the publisher.
+  const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|[\w-]+\.vercel\.app)\/?/;
 
     for (const project of projects.items) {
       for (const link of [
@@ -181,18 +183,17 @@ describe('every project renders with a diagram and working links', () => {
       const vercelForRepo = (href) =>
         /^https:\/\/[\w-]+\.vercel\.app/.test(href) &&
         href.toLowerCase().includes(repoName.toLowerCase());
-      const isPublishedPaper = (href) => href === research.paperUrl;
-
+  
       for (const action of project.actions) {
         assert.ok(
-          underRepo(action.href) || pagesForRepo(action.href) || isPublishedPaper(action.href) || vercelForRepo(action.href),
+          underRepo(action.href) || pagesForRepo(action.href) || vercelForRepo(action.href),
           `project ${project.id} action ${action.href} is not traceable to its repository ${repoUrl}`,
         );
       }
 
       if (project.live) {
         assert.ok(
-          pagesForRepo(project.live.href) || isPublishedPaper(project.live.href) || vercelForRepo(project.live.href),
+          pagesForRepo(project.live.href) || vercelForRepo(project.live.href),
           `project ${project.id} live link ${project.live.href} is not traceable to its repository ${repoUrl}`,
         );
       }
@@ -213,21 +214,6 @@ describe('every project renders with a diagram and working links', () => {
       }
       assert.ok(project.facts?.length >= 4, `project ${project.id} has too few facts`);
     }
-  });
-
-  test('a downloadable build is offered as a download, not as a description of one', () => {
-    // The Android card's primary action has to be the release asset itself. A
-    // link to the releases page is a page describing the download, and the note
-    // on that card used to cover for exactly that.
-    const bloodBank = projects.items.find((p) => p.id === 'android-blood-bank');
-    const download = bloodBank.actions.find((a) => a.kind === 'download');
-
-    assert.ok(download, 'the Android project offers no download');
-    assert.match(
-      download.href,
-      /^https:\/\/github\.com\/0535MANIDEEP\/blood-bank-android\/releases\/download\/.+\.apk$/,
-      `the download should be the release asset, got ${download.href}`,
-    );
   });
 
   test('a project that has a live site offers it on the detail page', () => {
@@ -291,18 +277,6 @@ describe('every project renders with a diagram and working links', () => {
         `the site still claims "${match?.[0]}", because ${why}`,
       );
     }
-  });
-
-  test('the Android app is described as offline, because it is', () => {
-    // Verified in AndroidManifest: the only permissions are ACCESS_COARSE_LOCATION
-    // and ACCESS_FINE_LOCATION. No INTERNET, no network code anywhere.
-    const bloodBank = projects.items.find((p) => p.id === 'android-blood-bank');
-    const text = JSON.stringify(bloodBank).toLowerCase();
-
-    assert.ok(
-      /offline|no network|none required/.test(text),
-      'the Android project should state that it needs no network, because it does not',
-    );
   });
 });
 
@@ -483,7 +457,7 @@ describe('a nested scroller is exempted from the smooth scroll layer', () => {
 
   test('the detail panel carries data-lenis-prevent', () => {
     const detail = renderToString(
-      createElement(ProjectDetail, { projectId: 'android-blood-bank', onClose: noop }),
+      createElement(ProjectDetail, { projectId: 'taskflow', onClose: noop }),
     );
     assert.ok(
       /data-lenis-prevent/.test(detail),
@@ -496,7 +470,7 @@ describe('a nested scroller is exempted from the smooth scroll layer', () => {
     // would be harmless and this test would still pass while the original bug
     // came back through a different route.
     const detail = renderToString(
-      createElement(ProjectDetail, { projectId: 'android-blood-bank', onClose: noop }),
+      createElement(ProjectDetail, { projectId: 'taskflow', onClose: noop }),
     );
     assert.ok(/overflow-y-auto/.test(detail), 'the detail panel is no longer the scroll container');
     assert.ok(/min-h-0/.test(detail), 'without min-h-0 the flex child cannot shrink, so it cannot scroll');
@@ -592,15 +566,6 @@ describe('copy discipline', () => {
     // Stated as a rule for this site, so it is a rule with a test.
     const serialised = JSON.stringify({ projects, projectFlows });
     assert.ok(!serialised.includes('—'), 'an em dash is present in the content');
-  });
-
-  test('the boundary of the blood project is stated, not implied', () => {
-    // The backend is the one project that could be mistaken for a clinical
-    // service, so its card has to say what it is not.
-    const blood = projects.items.find((p) => /blood-network/i.test(p.id) || /blood network/i.test(p.title ?? ''));
-    if (!blood) return; // not added yet, nothing to assert
-    const text = `${blood.body} ${blood.note ?? ''}`;
-    assert.match(text, /not a blood bank|not a medical device/i, 'the blood project must state what it is not');
   });
 });
 

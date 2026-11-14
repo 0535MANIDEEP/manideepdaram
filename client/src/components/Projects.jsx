@@ -6,14 +6,13 @@ import { SectionHeading } from './SectionHeading.jsx';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
 
 /**
- * Layout family: a bento of three cells.
+ * Layout family: a bento of two cells.
  *
- * Three projects, three cells, no filler. The order matches the evidence
- * strongest first: TaskFlow and DocVault are live and deployed on free tiers,
- * so they carry their links on the card, and the Android app carries its APK
- * so the detail page is what it always was, a readme you can click.
+ * Two projects, two cells. The order matches the evidence strongest first:
+ * TaskFlow, then DocVault. Both are live and deployed on free tiers, so both
+ * carry their links on the card.
  */
-const SPANS = ['lg:col-span-5', 'lg:col-span-4', 'lg:col-span-3'];
+const SPANS = ['lg:col-span-6', 'lg:col-span-6'];
 
 export function Projects({ onOpen }) {
   return (
@@ -21,7 +20,7 @@ export function Projects({ onOpen }) {
       <div className="container-page">
         <SectionHeading
           title={projects.heading}
-          lede="Three projects, all live and public, from problem statement to a page that works."
+          lede="Two projects, both live and public, from problem statement to a page that works."
           id="projects-heading"
         />
 
