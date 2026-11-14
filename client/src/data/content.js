@@ -30,7 +30,7 @@ export const hero = {
   subtext:
     'B.Tech Computer Science graduate, 8.53 CGPA, with seven months of frontend internship on a production risk-management application.',
   primaryCta: { label: 'Request Resume', target: '#contact' },
-  secondaryCta: { label: 'Explore Work', target: '#experience' },
+  secondaryCta: { label: 'Explore Work', target: '#projects' },
 };
 
 /**
@@ -51,6 +51,26 @@ export const images = {
  * of how it actually works, drawn only from the real project descriptions.
  */
 export const projectFlows = {
+  taskflow: {
+    caption: 'How it works',
+    // Every step here is what the code does. The permission check happens in
+    // the service layer, before the SQL is written.
+    steps: [
+      { icon: 'userPlus', label: 'Someone registers', detail: 'A password is hashed, and the token carries a user id and nothing else' },
+      { icon: 'sealCheck', label: 'The rule is read', detail: 'The role comes from the database on each request, not from the token' },
+      { icon: 'path', label: 'The service decides', detail: 'Only the service knows who may do what, in one place' },
+      { icon: 'list', label: 'The client sees it', detail: 'The interface hides what a role cannot use, and the API refuses it either way' },
+    ],
+  },
+  docvault: {
+    caption: 'How it works',
+    steps: [
+      { icon: 'userPlus', label: 'Someone signs in', detail: 'The first account is the admin, every one after that is a reviewer or a viewer' },
+      { icon: 'sealCheck', label: 'The rule is read', detail: 'The same five permissions the interface reads, checked in the route handlers' },
+      { icon: 'checkCircle', label: 'The server decides', detail: 'A hidden button is a convenience, a refused request is the security' },
+      { icon: 'list', label: 'The button proves it', detail: 'The detail page asks the API what it would decide, so the refusal can be watched' },
+    ],
+  },
   'android-blood-bank': {
     caption: 'How the app works',
     // Every step here was checked against the source in blood-bank-android. The
@@ -71,7 +91,7 @@ export const projectFlows = {
 export const metrics = [
   { value: '8.53', label: 'B.Tech CGPA', sub: 'out of 10.0' },
   { value: '7 months', label: 'Frontend internship', sub: 'Dec 2023 to Jun 2024' },
-  { value: 'JETIR', label: 'Published research', sub: 'UGC approved, April 2024' },
+  { value: '3', label: 'Shipped projects', sub: 'Live on free tiers' },
   { value: '2024', label: 'Graduate', sub: 'Vidya Jyothi Institute' },
 ];
 
@@ -198,32 +218,69 @@ export const skills = {
 
 export const projects = {
   heading: 'Selected work',
-  /**
-   * One project is left here and the section is not on the page.
-   *
-   * The section was switched off rather than deleted because the projects
-   * coming next are the ones worth showing a recruiter: a full stack task
-   * manager, an object oriented library console app and a risk register
-   * dashboard. Until those are live, a section headed "Selected work" with
-   * one entry in it reads worse than no section at all.
-   *
-   * To bring it back, render <Projects /> in App.jsx and put the link back in
-   * nav. The data is already here and already tested.
-   */
   items: [
+    {
+      id: 'taskflow',
+      title: 'TaskFlow',
+      kicker: 'Full stack task manager',
+      result: 'An admin and a member sign in to different projects, and every rule about who can do what is enforced by the API.',
+      body: 'A full stack task manager with role based access control. Projects and tasks, search and filtering, a task board in three columns, and validated forms with loading, empty and error states. The first account to register is the admin and every account after that is a member.',
+      stack: ['React', 'TypeScript', 'Node.js', 'Express', 'PostgreSQL', 'JWT', 'Vitest'],
+      repo: 'https://github.com/0535MANIDEEP/taskflow',
+      live: { label: 'Live demo', href: 'https://taskflow-web-rosy.vercel.app' },
+      screenshot: { src: 'projects/taskflow-board.png', alt: 'The TaskFlow task board, with one task in progress' },
+      actions: [
+        {
+          label: 'See it working',
+          href: 'https://taskflow-web-rosy.vercel.app',
+          kind: 'demo',
+          detail: 'No account needed to look at it. Register, and the account you make becomes the admin.',
+        },
+      ],
+      facts: [
+        { label: 'Roles', value: 'Admin and member' },
+        { label: 'Auth', value: 'Bcrypt and JWT' },
+        { label: 'Tests', value: '44, in CI on every push' },
+        { label: 'Storage', value: 'PostgreSQL, on Neon' },
+      ],
+      note: 'Both the API and the front end are deployed on free tiers, and the database is on Neon. The access rules are written once in the service layer and the API refuses anything else.',
+    },
+    {
+      id: 'docvault',
+      title: 'DocVault',
+      kicker: 'Document management with access rules',
+      result: 'An admin, a reviewer and a viewer see the same page and can do different things, and the page can show you the server refusing.',
+      body: 'A document management app with role based access control. The same permissions hide controls in the interface and refuse the request in the route handlers. The detail page carries a button that asks the API what it would decide, so a visitor can watch a 403 come back instead of taking the security on trust.',
+      stack: ['Next.js', 'React', 'TypeScript', 'Zustand', 'Zod', 'Vitest'],
+      repo: 'https://github.com/0535MANIDEEP/docvault',
+      live: { label: 'Live demo', href: 'https://docvault-blond-rho.vercel.app' },
+      screenshot: { src: 'projects/docvault-register.png', alt: 'The DocVault register, listing documents with their statuses' },
+      actions: [
+        {
+          label: 'See it working',
+          href: 'https://docvault-blond-rho.vercel.app',
+          kind: 'demo',
+          detail: 'Sign in as the admin, the reviewer or the viewer from the login page, and the demo fills the credentials in for you.',
+        },
+      ],
+      facts: [
+        { label: 'Roles', value: 'Admin, reviewer, viewer' },
+        { label: 'Permissions', value: 'Five, one per action' },
+        { label: 'Tests', value: '44, in CI on every push' },
+        { label: 'The point', value: 'The server refuses, not the interface' },
+      ],
+      note: 'The same five permissions the interface reads, in the route handlers. The button on the detail page asks the API what it would decide, so the refusal can be seen rather than described.',
+    },
     {
       id: 'android-blood-bank',
       title: 'Android Blood Bank Management App',
       kicker: 'Native Android',
+      result: 'A donor registers, a hospital asks for units, and the app returns compatible donors ranked by distance.',
       body: 'A native Android application for blood bank stock and donor matching. Register donors with their blood group, raise a request for units from a hospital, and the app returns donors of compatible groups ranked by distance, with a tap to open the dialer pre-filled. Everything runs on the device.',
       stack: ['Android Studio', 'Java', 'XML UI', 'SQLite', 'Material 3'],
       repo: 'https://github.com/0535MANIDEEP/blood-bank-android',
-      /**
-       * What the detail page offers, in the order it should be read.
-       *
-       * `kind` is only a hint for the icon and the wording, never for whether
-       * the link works. Every href here is real and resolves.
-       */
+      live: null,
+      screenshot: { src: 'projects/blood-bank-android.png', alt: 'The Blood Bank app dashboard, with donors, requests and stock' },
       actions: [
         {
           label: 'Download the APK',
@@ -366,6 +423,7 @@ export const nav = [
   { label: 'About', target: '#about', testId: 'nav-link-about' },
   { label: 'Skills', target: '#skills', testId: 'nav-link-skills' },
   { label: 'Experience', target: '#experience', testId: 'nav-link-experience' },
+  { label: 'Projects', target: '#projects', testId: 'nav-link-projects' },
   { label: 'Publication', target: '#research', testId: 'nav-link-research' },
   { label: 'Request Resume', target: '#contact', testId: 'nav-link-contact', cta: true },
 ];

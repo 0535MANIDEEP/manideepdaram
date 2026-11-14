@@ -86,19 +86,21 @@ describe('the app renders', () => {
   });
 
   test('every section is present', () => {
-    // "projects" is not in this list because the section is switched off on
-    // purpose. The next projects are the ones worth showing, and until they are
-    // live a section headed "Selected work" with one entry in it reads worse
-    // than no section at all. Add "projects" back here in the same commit that
-    // renders <Projects /> again.
-    for (const id of ['hero', 'about', 'experience', 'skills', 'education', 'contact']) {
+    // The projects section is in the list while Tasks flow, DocVault and the
+    // Android app are all live and public. Drop it in the same commit if the
+    // data or the card design ever regresses.
+    for (const id of ['hero', 'about', 'experience', 'projects', 'skills', 'education', 'contact']) {
       assert.ok(html.includes(`id="${id}"`), `section #${id} is missing from the render`);
     }
   });
 
-  test('the projects section is deliberately switched off', () => {
-    // Stated so that the switch back on is a decision rather than a drift.
-    assert.ok(!html.includes('id="projects"'), 'the projects section is back on the page');
+  test('the projects section renders its three cards', () => {
+    for (const project of projects.items) {
+      assert.ok(
+        html.includes(`data-testid="project-card-${project.id}"`),
+        `the projects section is missing the ${project.id} card`,
+      );
+    }
   });
 
   test('the page carries a real title and description', () => {
@@ -131,15 +133,19 @@ describe('every project renders with a diagram and working links', () => {
     // identical to a working one in the source.
     //
     // The domain list is an allowlist of places a project link may legitimately
-    // point: his own repositories, the Pages site built from one of them, and the
-    // journal that published the paper. jetir.org was added when the FoodForward
-    // card linked to the actual PDF, which returns HTTP 200 and 1,010,538 bytes
-    // of application/pdf. It is a named publisher rather than a wildcard, so a
-    // link to some random host still fails.
-    const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|www\.jetir\.org)\//;
+    // point: his own repositories, the Pages site built from one of them, the
+    // journal that published the paper, and the Vercel team the deploys live
+    // on. jetir.org was added when the FoodForward card linked to the actual PDF,
+    // which returns HTTP 200 and 1,010,538 bytes of application/pdf.
+    const ALLOWED = /^https:\/\/(github\.com|0535manideep\.github\.io|www\.jetir\.org|[\w-]+\.vercel\.app)\/?/;
 
     for (const project of projects.items) {
-      for (const link of [project.repo, ...project.actions.map((a) => a.href)]) {
+      for (const link of [
+        project.repo,
+        project.live?.href,
+        ...project.actions.map((a) => a.href),
+      ]) {
+        if (!link) continue;
         assert.match(
           link,
           ALLOWED,
@@ -164,16 +170,30 @@ describe('every project renders with a diagram and working links', () => {
       const repoUrl = project.repo.replace(/\/$/, '');
       const repoName = repoUrl.split('/').filter(Boolean).pop();
 
-      for (const action of project.actions) {
-        const underRepo = action.href.startsWith(repoUrl);
-        const pagesForRepo =
-          action.href.toLowerCase().includes('0535manideep.github.io/') &&
-          action.href.toLowerCase().includes('/' + repoName.toLowerCase() + '/');
-        const isPublishedPaper = action.href === research.paperUrl;
+      const underRepo = (href) => href.startsWith(repoUrl);
+      const pagesForRepo = (href) =>
+        href.toLowerCase().includes('0535manideep.github.io/') &&
+        href.toLowerCase().includes('/' + repoName.toLowerCase() + '/');
+      // A live deployment is a Vercel site whose name contains the repository
+      // name. That is looser than the prefix match but tighter than a host
+      // allow-list: a link to some unrelated Vercel project fails this test,
+      // which is what it is here for.
+      const vercelForRepo = (href) =>
+        /^https:\/\/[\w-]+\.vercel\.app/.test(href) &&
+        href.toLowerCase().includes(repoName.toLowerCase());
+      const isPublishedPaper = (href) => href === research.paperUrl;
 
+      for (const action of project.actions) {
         assert.ok(
-          underRepo || pagesForRepo || isPublishedPaper,
+          underRepo(action.href) || pagesForRepo(action.href) || isPublishedPaper(action.href) || vercelForRepo(action.href),
           `project ${project.id} action ${action.href} is not traceable to its repository ${repoUrl}`,
+        );
+      }
+
+      if (project.live) {
+        assert.ok(
+          pagesForRepo(project.live.href) || isPublishedPaper(project.live.href) || vercelForRepo(project.live.href),
+          `project ${project.id} live link ${project.live.href} is not traceable to its repository ${repoUrl}`,
         );
       }
     }
@@ -302,12 +322,18 @@ describe('the project card offers exactly two things', () => {
     }
   });
 
-  test('the card links nowhere else', () => {
-    // The downloads and the live site moved to the detail page on purpose. If a
-    // direct link reappears here, the card is back to being a menu and the
-    // detail page has no reason to exist.
+  test('the card links nowhere else than its two deliberate links', () => {
+    // The card offers exactly two hrefs: the repository, and the live demo
+    // for the two projects that have one. The other actions (the database
+    // documentation, the release asset, the paper) live on the detail page
+    // and are not to reappear on the card. A card with any other link is a
+    // menu, and the detail page has no reason to exist.
     for (const project of projects.items) {
+      const allowed = new Set([project.repo]);
+      if (project.live) allowed.add(project.live.href);
+
       for (const action of project.actions) {
+        if (allowed.has(action.href)) continue;
         assert.ok(
           !projectsHtml.includes(`href="${action.href}"`),
           `project ${project.id} still links its detail action ${action.href} from the card`,
@@ -328,7 +354,26 @@ describe('the project card offers exactly two things', () => {
   test('every card names both actions in text, not only in an aria label', () => {
     for (const project of projects.items) {
       assert.ok(projectsHtml.includes('Project details'), 'the details button has no visible label');
-      assert.ok(projectsHtml.includes('Visit repository'), 'the repository button has no visible label');
+      assert.ok(projectsHtml.includes('Code'), 'the repo button has no visible label');
+    }
+  });
+
+  test('every project with a live site carries it on the card', () => {
+    // The user asked for Live and Code buttons on the card, and the card
+    // is the only place in the site that shows the live demos. DocVault and
+    // TaskFlow both ship one, so both have to be there. A project without a
+    // live URL (the Android app) skips this check and carries a download instead.
+    for (const project of projects.items) {
+      if (project.live) {
+        assert.ok(
+          projectsHtml.includes(`data-testid="project-live-${project.id}"`),
+          `project ${project.id} offers no Live link on its card`,
+        );
+        assert.ok(
+          projectsHtml.includes(`href="${project.live.href}"`),
+          `project ${project.id} live link ${project.live.href} is not present on its card`,
+        );
+      }
     }
   });
 

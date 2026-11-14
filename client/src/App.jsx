@@ -75,17 +75,10 @@ export default function App() {
         <MetricsBand />
         <MarqueeBand />
         <About />
-        {/*
-          The Projects section is switched off rather than deleted. The projects
-          coming next are the ones worth showing, and until they are live a
-          section headed "Selected work" with one entry in it reads worse than
-          no section at all. The component and its data are still here and
-          still tested: rendering <Projects /> below and putting the link back
-          in nav is the whole of turning it on.
-        */}
         <Experience />
         <Education />
         <Skills />
+        <Projects onOpen={open} />
         <Research />
         <Milestones />
         <Contact />
