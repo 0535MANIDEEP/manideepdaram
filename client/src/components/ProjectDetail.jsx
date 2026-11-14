@@ -12,7 +12,7 @@ import { Icon } from './icons.jsx';
  * Rendered as an overlay rather than as a new page in a router, because the site
  * has no router and adding one for two projects would be a dependency and a
  * routing layer to maintain in exchange for two URLs. It does get a real URL,
- * `#/project/foodforward`, so it is linkable and the browser back button closes
+ * `#/project/taskflow`, so it is linkable and the browser back button closes
  * it, which is the part that actually matters.
  *
  * Everything actionable lives here. The card carries exactly two buttons, so a

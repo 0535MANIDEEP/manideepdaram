@@ -263,6 +263,10 @@ export const milestones = {
   heading: 'Milestones I am proud of',
   items: [
     {
+      title: 'Paper published in JETIR',
+      detail: "Co-author of 'FoodForward: An Initiative to Reduce Food Wastage', International Journal of Emerging Technologies and Innovative Research, April 2024.",
+    },
+    {
       title: 'Two public full stack projects',
       detail: 'TaskFlow and DocVault, both live on free tiers with public source and CI.',
     },
