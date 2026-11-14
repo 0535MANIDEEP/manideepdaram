@@ -12,8 +12,8 @@ export const identity = {
   name: 'Manideep Daram',
   nameDisplay: 'MANIDEEP DARAM',
   initials: 'MD',
-  role: 'Computer Science & Engineering Graduate',
-  roleSecondary: 'Software Engineer, Fresher',
+  role: 'Frontend Developer',
+  roleStack: ['React', 'Vue', 'TypeScript'],
   location: 'Hyderabad, Telangana, India',
   email: 'manideepdaram@gmail.com',
   phone: '+917386296828',
@@ -28,9 +28,9 @@ export const hero = {
   eyebrow: 'Open to Software Engineer roles',
   headlineLines: ['MANIDEEP', 'DARAM'],
   subtext:
-    'B.Tech Computer Science graduate, 8.53 CGPA, with a published research paper and two shipped projects.',
+    'B.Tech Computer Science graduate, 8.53 CGPA, with seven months of frontend internship on a production risk-management application.',
   primaryCta: { label: 'Request Resume', target: '#contact' },
-  secondaryCta: { label: 'Explore Work', target: '#projects' },
+  secondaryCta: { label: 'Explore Work', target: '#experience' },
 };
 
 /**
@@ -65,27 +65,13 @@ export const projectFlows = {
       { icon: 'list', label: 'Stock is listed', detail: 'Blood bank units held locally, and a tap opens the dialer pre-filled' },
     ],
   },
-  foodforward: {
-    caption: 'How the platform works',
-    steps: [
-      { icon: 'storefront', label: 'Surplus is listed', detail: 'Weight, category, pickup window, and the safe-until time or its absence' },
-      { icon: 'x', label: 'Safety check refuses it', detail: 'No expiry recorded, or already past, never reaches a hub' },
-      { icon: 'path', label: 'Routing is computed', detail: 'Nearest hub with room, open hours, and matching category' },
-      { icon: 'chartLine', label: 'Handover is recorded', detail: 'Counted once, from the collection rather than the listing' },
-    ],
-    citation: {
-      journal: 'International Journal of Emerging Technologies and Innovative Research',
-      detail: 'Vol. 11, Issue 4, pp. f645-f647, April 2024',
-      id: 'JETIR2404570',
-    },
-  },
 };
 
 /** Metrics band sits directly under the hero, never inside it (SS 4.7). */
 export const metrics = [
   { value: '8.53', label: 'B.Tech CGPA', sub: 'out of 10.0' },
+  { value: '7 months', label: 'Frontend internship', sub: 'Dec 2023 to Jun 2024' },
   { value: 'JETIR', label: 'Published research', sub: 'UGC approved, April 2024' },
-  { value: '2', label: 'Shipped projects', sub: 'Android and full stack' },
   { value: '2024', label: 'Graduate', sub: 'Vidya Jyothi Institute' },
 ];
 
@@ -95,9 +81,9 @@ export const marqueeItems = [
   'DBMS & SQL',
   'FULL STACK WEB',
   'PUBLISHED RESEARCHER',
-  'ANDROID MOBILE APPS',
+  'REACT, VUE & TYPESCRIPT',
   'AGILE & SOFTWARE ENGINEERING',
-  'JAVA & JAVASCRIPT',
+  'ACCESS CONTROL IN THE API',
   'B.TECH COMPUTER SCIENCE',
 ];
 
@@ -105,14 +91,64 @@ export const about = {
   heading: 'A graduate who ships, not just studies',
   body: [
     'I am a 2024 Computer Science graduate from Vidya Jyothi Institute of Technology in Hyderabad, now looking for a Software Engineer role.',
-    'Most of my work has been end to end. The Android Blood Bank app handled donor matching, location alerts and blood bank communication in one native build. FoodForward routes surplus food to shelter hubs and refuses anything unsafe to send, and the research behind it became a published JETIR paper.',
-    'I work in Java, JavaScript and Python, and I am comfortable across the stack rather than locked to one layer.',
+    'Seven of those months were spent inside a team, building forms, screens, tabs and navigation for a production risk-management application in Vue.js, and then integrating the REST endpoints behind it. The research behind one of my own projects became a published JETIR paper.',
+    'I work in Java, JavaScript, TypeScript and Python, and I am comfortable across the stack rather than locked to one layer.',
   ],
   strengths: [
+    { label: 'Interfaces', detail: 'Vue.js, React.js and TypeScript, with validated forms and the loading, empty and error states that go with them' },
     { label: 'Backend and APIs', detail: 'REST services in Node and Express, relational schema design in MySQL' },
-    { label: 'Android', detail: 'Native Java apps, local SQLite, on-device matching' },
-    { label: 'Research', detail: 'Co-author on a UGC approved JETIR publication' },
-    { label: 'Practice', detail: 'Agile delivery, code review, Git branching' },
+    { label: 'Access control', detail: 'Role based permissions enforced by the API, not only hidden in the interface' },
+    { label: 'Practice', detail: 'Agile delivery, code review, Git branching, and CI on every push' },
+  ],
+};
+
+/**
+ * Experience.
+ *
+ * The internship is the entry that carries this site for the first
+ * application. It is commercial work, so there is no repository behind it and
+ * the only thing that can be offered is an accurate description of it.
+ *
+ * The role based access control bullet carries a public build of the same idea
+ * beside it, because a claim about authorization that cannot be checked is a
+ * claim nobody can verify. DocVault is that check: the same permission matrix
+ * enforced in the API, in public code.
+ */
+export const experience = {
+  heading: 'Experience',
+  entries: [
+    {
+      id: 'crystalline',
+      company: 'Crystalline Software Technologies',
+      location: 'Hyderabad, India',
+      role: 'Frontend Development Intern',
+      period: 'Dec 2023 to Jun 2024',
+      bullets: [
+        { label: 'Developed forms, screens, tabs and navigation for a production risk-management single page application in Vue.js, delivering assigned tasks in an Agile team.' },
+        { label: 'Implemented client-side form validation, loading screens and empty states to handle invalid input and asynchronous or missing data.' },
+        {
+          label: 'Implemented role based access control authorization logic for document management, controlling document access by user role.',
+          proof: {
+            label: 'Public build',
+            href: 'https://github.com/0535MANIDEEP/docvault',
+            live: 'https://docvault-blond-rho.vercel.app',
+            note: 'The same permission model, in public code.',
+          },
+        },
+        { label: 'Supported the migration of legacy JavaScript files to TypeScript.' },
+        { label: 'Integrated REST API responses into frontend components, tested endpoints in Postman, and investigated and debugged application issues.' },
+      ],
+    },
+    {
+      id: 'self-directed',
+      company: 'Self-directed learning and job search',
+      location: 'Hyderabad, India',
+      role: 'Building and shipping',
+      period: 'Jul 2024 to Present',
+      bullets: [
+        { label: 'Continued developing in Vue.js, React.js, TypeScript and REST API integration while applying for software engineering roles.' },
+      ],
+    },
   ],
 };
 
@@ -137,11 +173,14 @@ export const skills = {
   categories: [
     {
       name: 'Programming',
-      items: ['Java', 'Python', 'JavaScript', 'C / C++', 'SQL'],
+      items: ['Java', 'Python', 'JavaScript', 'TypeScript', 'SQL'],
     },
     {
       name: 'Web and Core CS',
-      items: ['React.js', 'Node.js', 'HTML5 / CSS3', 'Tailwind CSS', 'REST APIs'],
+      // Vue.js came from six months of internship work, and TypeScript from
+      // the migration of that same code. Neither was on this list before, and
+      // both are on the resume now, so the site and the resume agree.
+      items: ['React.js', 'Vue.js', 'Node.js', 'HTML5 / CSS3', 'Tailwind CSS', 'REST APIs'],
     },
     {
       name: 'Data and Systems',
@@ -152,13 +191,25 @@ export const skills = {
     },
     {
       name: 'Engineering and Tools',
-      items: ['Agile', 'Git and GitHub', 'Android Studio', 'Data Structures', 'Computer Networks'],
+      items: ['Agile', 'Git and GitHub', 'GitHub Actions', 'Android Studio', 'Data Structures', 'Computer Networks'],
     },
   ],
 };
 
 export const projects = {
   heading: 'Selected work',
+  /**
+   * One project is left here and the section is not on the page.
+   *
+   * The section was switched off rather than deleted because the projects
+   * coming next are the ones worth showing a recruiter: a full stack task
+   * manager, an object oriented library console app and a risk register
+   * dashboard. Until those are live, a section headed "Selected work" with
+   * one entry in it reads worse than no section at all.
+   *
+   * To bring it back, render <Projects /> in App.jsx and put the link back in
+   * nav. The data is already here and already tested.
+   */
   items: [
     {
       id: 'android-blood-bank',
@@ -189,51 +240,6 @@ export const projects = {
       ],
       note: 'Installs on Android 7.0 and newer. Runs fully offline, no account or API keys. The build above is the release asset, not a page describing one.',
     },
-    {
-      id: 'foodforward',
-      title: 'FoodForward',
-      kicker: 'Published research, built in full',
-      body: 'A platform that routes surplus food from restaurants and events to nearby shelter hubs, and refuses anything unsafe to send. A listing with no safe-until time, or one already past it, is rejected inside the assignment transaction rather than flagged and routed anyway, so no code path can produce a valid assignment for food that could make somebody ill. The research behind it became a JETIR paper.',
-      /**
-       * MySQL, not MongoDB.
-       *
-       * The earlier list claimed MongoDB, which contradicts the published paper:
-       * the JETIR abstract names MySQL. The paper is the source of truth for a
-       * published claim, so the stack follows it. React and Tailwind are the
-       * interface, rebuilt after the 2024 prototype, and the MySQL schema and
-       * routing rules are the paper's.
-       */
-      stack: ['Node.js', 'Express', 'MySQL', 'React.js', 'Tailwind CSS', 'REST APIs'],
-      repo: 'https://github.com/0535MANIDEEP/foodforward',
-      actions: [
-        {
-          label: 'Visit the live interface',
-          href: 'https://0535manideep.github.io/foodforward/',
-          kind: 'demo',
-          detail: 'Deployed to GitHub Pages. The API is a separate deployment, so until it is running the interface reports itself as unconnected rather than showing invented figures. The repository is the better evidence.',
-        },
-        {
-          label: 'Read the paper',
-          href: 'https://www.jetir.org/papers/JETIR2404570.pdf',
-          kind: 'paper',
-          detail: 'JETIR2404570, pp. f645-f647, April 2024. Co-authored, and the reason the schema uses MySQL.',
-        },
-      ],
-      facts: [
-        { label: 'Database', value: 'MySQL 8, no ORM' },
-        { label: 'Safety rule', value: 'Refused in the transaction' },
-        { label: 'Tests', value: '148, 69 need no setup' },
-        { label: 'Double counting', value: 'Blocked by the schema' },
-      ],
-      /**
-       * The repository is the proof, so the card says so plainly rather than
-       * apologising for the API not being deployed. 69 of the 148 tests run from
-       * a fresh clone with no install and no database, which is a stronger claim
-       * than a screenshot of a working demo would be: anybody can check it in ten
-       * seconds instead of taking it on trust.
-       */
-      note: 'Clone it and run npm run test:domain. No install, no database, 69 tests covering the safety refusals, the routing rules and the impact accounting. The API is a separate deployment, and the interface says so rather than faking data.',
-    },
   ],
 };
 
@@ -246,7 +252,7 @@ export const projects = {
  *
  *   - the journal name was missing "International". The full title is
  *     "International Journal of Emerging Technologies and Innovative Research".
- *   - the ISSN read 2349-5162. It is 2349-9162.
+ *   - The ISSN read 2349-5162. It is 2349-9162.
  *
  * A wrong ISSN on a published citation is the kind of error that makes a real
  * publication look fabricated, which is the opposite of what this section is for.
@@ -256,9 +262,13 @@ export const projects = {
  * The link is https, not http. Both resolve and both return the same 1,010,538
  * byte PDF, but a portfolio should not hand a reader a plaintext link when the
  * publisher serves TLS.
+ *
+ * The project entry for this system was taken off the site when the section
+ * was switched off, because the deployed interface never had its API behind
+ * it. The paper is a different claim and it stands on its own.
  */
 export const research = {
-  heading: 'Research',
+  heading: 'Publication',
   paperTitle: 'FoodForward: An Initiative to Reduce Food Wastage',
   journal: 'International Journal of Emerging Technologies and Innovative Research',
   approval: 'UGC Approved',
@@ -276,7 +286,7 @@ export const milestones = {
   items: [
     {
       title: 'Paper accepted to JETIR',
-      detail: 'Foodforward published in a UGC approved journal, April 2024.',
+      detail: 'Published in a UGC approved journal, April 2024.',
     },
     {
       title: 'Mini-project exhibition',
@@ -287,8 +297,8 @@ export const milestones = {
       detail: 'Graduated Computer Science with distinction from Vidya Jyothi Institute.',
     },
     {
-      title: 'Two projects shipped end to end',
-      detail: 'A native Android app, and a surplus food routing platform with a live interface, a deployable API and 148 automated tests.',
+      title: 'Seven months in a product team',
+      detail: 'Shipped Vue.js screens for a production risk-management application, then migrated legacy JavaScript to TypeScript.',
     },
   ],
 };
@@ -348,11 +358,14 @@ export const footer = {
  * other half of the header problem. A test asserts a single row at every desktop
  * width, so adding an item without checking that fails the build rather than
  * shipping a broken header.
+ *
+ * There is no Projects link while that section is switched off. A link to a
+ * section that is not on the page scrolls nowhere, which reads as a dead link.
  */
 export const nav = [
   { label: 'About', target: '#about', testId: 'nav-link-about' },
   { label: 'Skills', target: '#skills', testId: 'nav-link-skills' },
-  { label: 'Projects', target: '#projects', testId: 'nav-link-projects' },
-  { label: 'Research', target: '#research', testId: 'nav-link-research' },
+  { label: 'Experience', target: '#experience', testId: 'nav-link-experience' },
+  { label: 'Publication', target: '#research', testId: 'nav-link-research' },
   { label: 'Request Resume', target: '#contact', testId: 'nav-link-contact', cta: true },
 ];

@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, ArrowDown } from './icons.jsx';
+import { ArrowRight, ArrowDown, Icon } from './icons.jsx';
 import { ParticleField } from './ParticleField.jsx';
 import { hero, identity, images } from '../data/content.js';
 
@@ -73,6 +73,18 @@ export function Hero() {
           </h1>
 
           <motion.p
+            {...rise(0.42)}
+            className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1"
+          >
+            <span className="text-lg font-semibold tracking-tight text-primary">
+              {identity.role}
+            </span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+              {identity.roleStack.join(' / ')}
+            </span>
+          </motion.p>
+
+          <motion.p
             {...rise(0.5)}
             className="mt-7 max-w-[46ch] text-base leading-relaxed text-secondary sm:text-lg"
           >
@@ -98,11 +110,41 @@ export function Hero() {
             </a>
           </motion.div>
 
-          <motion.p
-            {...rise(0.74)}
-            className="mt-8 font-mono text-xs text-muted"
-          >
-            {identity.location} &nbsp;/&nbsp; {identity.email}
+          {/*
+            The three links a recruiter actually presses, where the location and
+            the bare email address used to be. A location is not a link and an
+            unstyled email is a chore to copy, and both were taking the space
+            the way to reach the work should take.
+          */}
+          <motion.p {...rise(0.74)} className="mt-8 flex flex-wrap items-center gap-3">
+            <a
+              href={identity.github}
+              target="_blank"
+              rel="noreferrer noopener"
+              data-testid="hero-github-link"
+              className="inline-flex items-center gap-2 rounded-pill border border-line-strong px-4 py-2 text-sm font-medium text-primary transition-colors hover:border-accent-40 hover:bg-accent-12 active:translate-y-[1px]"
+            >
+              <Icon name="githubLogo" size={15} weight="fill" />
+              GitHub
+            </a>
+            <a
+              href={identity.linkedin}
+              target="_blank"
+              rel="noreferrer noopener"
+              data-testid="hero-linkedin-link"
+              className="inline-flex items-center gap-2 rounded-pill border border-line-strong px-4 py-2 text-sm font-medium text-primary transition-colors hover:border-accent-40 hover:bg-accent-12 active:translate-y-[1px]"
+            >
+              <Icon name="linkedinLogo" size={15} weight="fill" />
+              LinkedIn
+            </a>
+            <a
+              href={`mailto:${identity.email}`}
+              data-testid="hero-email-link"
+              className="inline-flex items-center gap-2 rounded-pill border border-line-strong px-4 py-2 text-sm font-medium text-primary transition-colors hover:border-accent-40 hover:bg-accent-12 active:translate-y-[1px]"
+            >
+              <Icon name="envelopeSimple" size={15} weight="fill" />
+              Email
+            </a>
           </motion.p>
         </div>
 
