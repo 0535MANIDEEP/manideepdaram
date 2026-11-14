@@ -189,10 +189,9 @@ export const skills = {
     },
     {
       name: 'Data and Systems',
-      // MongoDB is back on this list: used through the internship team's
-      // API and data model, confirmed as stack exposure. Still nothing in
-      // the two shipped projects uses it, so it is not presented as their
-      // stack either.
+      // Internship exposure: the team's API and data model, used as stack
+      // familiarity. Not from either shipped project, and not presented
+      // as their stack either.
       items: ['DBMS', 'MySQL', 'Schema design', 'JDBC', 'MongoDB (via team API)'],
     },
     {

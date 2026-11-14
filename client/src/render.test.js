@@ -256,7 +256,6 @@ describe('every project renders with a diagram and working links', () => {
       { term: /firebase/i, why: 'not in the project, and there is no INTERNET permission' },
       { term: /\bchat\b/i, why: 'there is no messaging code in the project' },
       { term: /real[ -]?time/i, why: 'the app is fully offline, so nothing can be real time' },
-      { term: /mongo/i, why: 'no shipped project uses it' },
     ];
 
     // The whole content module, not a hand picked list of exports.
@@ -274,6 +273,23 @@ describe('every project renders with a diagram and working links', () => {
         match,
         null,
         `the site still claims "${match?.[0]}", because ${why}`,
+      );
+    }
+  });
+
+  test('any MongoDB mention carries the internship qualifier', () => {
+    // MongoDB entered the content as a real claim through the internship:
+    // used via the team's API and data model, not from either shipped
+    // project. The blanket ban came from a false claim in the Android card.
+    // The claim is now true, and it is only allowed to appear in the
+    // qualified form, so it can never silently grow into a project claim.
+    const prose = JSON.stringify(content);
+    const mentions = prose.match(/mongo[^,"]*/gi) || [];
+    assert.ok(mentions.length > 0, 'the skills line lost the internship MongoDB exposure');
+    for (const mention of mentions) {
+      assert.ok(
+        /^MongoDB \(via team API\)/i.test(mention.trim()),
+        `"${mention}" is not the qualified internship phrase`,
       );
     }
   });
