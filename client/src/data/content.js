@@ -108,11 +108,11 @@ export const marqueeItems = [
 ];
 
 export const about = {
-  heading: 'A graduate who ships, not just studies',
+  heading: 'I care about the parts users end up trusting',
   body: [
     'I am a 2024 Computer Science graduate from Vidya Jyothi Institute of Technology in Hyderabad, now looking for a Software Engineer role.',
     'Seven of those months were spent inside a team, building forms, screens, tabs and navigation for a production risk-management application in Vue.js, and then integrating the REST endpoints behind it. The research behind one of my own projects became a published JETIR paper.',
-    'I work in Java, JavaScript and TypeScript, and I am comfortable across the stack rather than locked to one layer.',
+    'I mostly build the layer between the screen and the server, checking the parts that decide whether a request is allowed or refused.',
   ],
   strengths: [
     { label: 'Interfaces', detail: 'Vue.js, React.js and TypeScript, with validated forms and the loading, empty and error states that go with them' },
