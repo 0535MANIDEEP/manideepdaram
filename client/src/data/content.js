@@ -12,7 +12,7 @@ export const identity = {
   name: 'Manideep Daram',
   nameDisplay: 'MANIDEEP DARAM',
   initials: 'MD',
-  role: 'Frontend Developer',
+  role: 'Full Stack Developer',
   roleStack: ['React', 'Vue', 'TypeScript'],
   location: 'Hyderabad, Telangana, India',
   email: 'manideepdaram@gmail.com',
@@ -25,10 +25,10 @@ export const identity = {
 
 /** Hero. Max 4 text elements total (SS 4.7): eyebrow, headline, subtext, CTAs. */
 export const hero = {
-  eyebrow: 'Open to Software Engineer roles',
+  eyebrow: 'Open to Full Stack Developer roles',
   headlineLines: ['MANIDEEP', 'DARAM'],
   subtext:
-    'B.Tech Computer Science graduate, 8.53 CGPA, with seven months of frontend internship on a production risk-management application.',
+    'B.Tech Computer Science graduate, 8.53 CGPA, with seven months as a Frontend Developer Intern on a production risk-management application.',
   primaryCta: { label: 'Request Resume', target: '#contact' },
   secondaryCta: { label: 'Explore Work', target: '#projects' },
 };
@@ -126,7 +126,7 @@ export const experience = {
       id: 'crystalline',
       company: 'Crystalline Software Technologies',
       location: 'Hyderabad, India',
-      role: 'Frontend Development Intern',
+      role: 'Frontend Developer Intern',
       period: 'Dec 2023 to Jun 2024',
       bullets: [
         { label: 'Developed forms, screens, tabs and navigation for a production risk-management single page application in Vue.js, delivering assigned tasks in an Agile team.' },
@@ -339,7 +339,7 @@ export const faq = {
     {
       question: 'Is Manideep Daram available for hire?',
       answer:
-        'Yes. He is open to full stack developer roles and internships, based in Hyderabad, India. The fastest routes are the contact form on this page or email at manideepdaram@gmail.com.',
+        'Yes. He is open to Full Stack Developer roles and internships, based in Hyderabad, India. The fastest routes are the contact form on this page or email at manideepdaram@gmail.com.',
     },
     {
       question: 'How does Manideep Daram handle access control?',
