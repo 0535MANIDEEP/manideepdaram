@@ -39,7 +39,7 @@ export const hero = {
  * particle field as texture, so it makes no claim about the work.
  */
 export const images = {
-  hero: 'https://images.unsplash.com/photo-1672872476232-da16b45c9001?w=1200&h=800&fit=crop&q=70&fm=webp',
+  hero: 'images/hero.webp',
 };
 
 /**
@@ -322,6 +322,48 @@ export const milestones = {
  * Contact. No resume download button anywhere on the site.
  * The form is the only conversion path, so it must actually submit.
  */
+export const faq = {
+  heading: 'Questions recruiters and engineers actually ask',
+  lede: 'Short, honest answers. Every claim here is backed by a link you can click.',
+  items: [
+    {
+      question: 'Who is Manideep Daram?',
+      answer:
+        'Manideep Daram is a B.Tech Computer Science graduate (2024, 8.53 CGPA) from Vidya Jyothi Institute of Technology, Hyderabad. From December 2023 to June 2024 he worked as a Frontend Developer Intern at Crystalline Software Technologies, building Angular and TypeScript components for production, shipping through code review, and owning UI work end to end.',
+    },
+    {
+      question: 'What does Manideep Daram build?',
+      answer:
+        'Full stack web applications with React, Vue.js, TypeScript, Node.js and PostgreSQL. His flagship work: TaskFlow (a task manager with JWT auth and role-based access control enforced in the service layer, 44 tests) and DocVault (a document system with a five-permission matrix enforced on both the UI and the API, 15 tests). Both are live and open source.',
+    },
+    {
+      question: 'Is Manideep Daram available for hire?',
+      answer:
+        'Yes. He is open to full stack developer roles and internships, based in Hyderabad, India. The fastest routes are the contact form on this page or email at manideepdaram@gmail.com.',
+    },
+    {
+      question: 'How does Manideep Daram handle access control?',
+      answer:
+        'One permission matrix, two readers. In DocVault a single can(role, permission) function defines five permissions across viewer, reviewer and admin roles; the UI gates rendering from it and every API route enforces it. In TaskFlow, role checks live in the service layer, so a member cannot delete a project even by calling the API directly. Hiding a button is not security â€” the refused request is.',
+    },
+    {
+      question: 'Has Manideep Daram published research?',
+      answer:
+        'Yes. FoodForward was published in the Journal of Emerging Technologies and Innovative Research (JETIR), April 2024. The citation and link are in the research section of this page and on his GitHub and LinkedIn profiles.',
+    },
+    {
+      question: 'Where is the source code?',
+      answer:
+        'Everything is public on GitHub under github.com/0535MANIDEEP. TaskFlow, DocVault and this portfolio all run tests on every push through GitHub Actions and deploy automatically from main.',
+    },
+    {
+      question: 'What is this site built with?',
+      answer:
+        'Vite, React 19 and Tailwind CSS v4, statically built and deployed on GitHub Pages. No tracking scripts, no external fonts or CDNs, and structured data (JSON-LD) plus Open Graph metadata for search engines.',
+    },
+  ],
+};
+
 export const contact = {
   heading: 'Want to hire me? Request my resume.',
   body: 'Tell me the role you are hiring for and I will send you my resume, along with anything relevant to that position.',

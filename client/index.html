@@ -13,6 +13,11 @@
     />
     <link rel="canonical" href="https://0535manideep.github.io/manideepdaram/" />
     <meta name="author" content="Manideep Daram" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'"
+    />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Manideep Daram" />
@@ -40,6 +45,7 @@
     {
       "@context": "https://schema.org",
       "@type": "Person",
+      "@id": "https://0535manideep.github.io/manideepdaram/#person",
       "name": "Manideep Daram",
       "url": "https://0535manideep.github.io/manideepdaram/",
       "image": "https://0535manideep.github.io/manideepdaram/og.png",
@@ -60,8 +66,7 @@
         "Role Based Access Control",
         "JWT",
         "GitHub Actions"
-      ],
-      "mainEntityOfPage": "/writing"
+      ]
     }
     </script>
 
@@ -69,9 +74,89 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": "https://0535manideep.github.io/manideepdaram/#website",
       "name": "Manideep Daram",
       "url": "https://0535manideep.github.io/manideepdaram/",
-      "author": { "@id": "https://0535manideep.github.io/manideepdaram/#person" }
+      "author": { "@id": "https://0535manideep.github.io/manideepdaram/#person" },
+      "publisher": { "@id": "https://0535manideep.github.io/manideepdaram/#person" }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://0535manideep.github.io/manideepdaram/#profilepage",
+      "url": "https://0535manideep.github.io/manideepdaram/",
+      "name": "Manideep Daram — Full Stack Developer",
+      "mainEntity": { "@id": "https://0535manideep.github.io/manideepdaram/#person" }
+    }
+    </script>
+
+    <!-- FAQPage mirrors the visible FAQ section exactly. Keep in sync with
+         src/data/content.js — mismatched markup and schema is ignored. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Who is Manideep Daram?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Manideep Daram is a B.Tech Computer Science graduate (2024, 8.53 CGPA) from Vidya Jyothi Institute of Technology, Hyderabad. From December 2023 to June 2024 he worked as a Frontend Developer Intern at Crystalline Software Technologies, building Angular and TypeScript components for production, shipping through code review, and owning UI work end to end."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does Manideep Daram build?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Full stack web applications with React, Vue.js, TypeScript, Node.js and PostgreSQL. His flagship work: TaskFlow (a task manager with JWT auth and role-based access control enforced in the service layer, 44 tests) and DocVault (a document system with a five-permission matrix enforced on both the UI and the API, 15 tests). Both are live and open source."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Manideep Daram available for hire?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. He is open to full stack developer roles and internships, based in Hyderabad, India. The fastest routes are the contact form on this page or email at manideepdaram@gmail.com."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Manideep Daram handle access control?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One permission matrix, two readers. In DocVault a single can(role, permission) function defines five permissions across viewer, reviewer and admin roles; the UI gates rendering from it and every API route enforces it. In TaskFlow, role checks live in the service layer, so a member cannot delete a project even by calling the API directly. Hiding a button is not security — the refused request is."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Has Manideep Daram published research?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. FoodForward was published in the Journal of Emerging Technologies and Innovative Research (JETIR), April 2024. The citation and link are in the research section of this page and on his GitHub and LinkedIn profiles."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is the source code?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Everything is public on GitHub under github.com/0535MANIDEEP. TaskFlow, DocVault and this portfolio all run tests on every push through GitHub Actions and deploy automatically from main."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is this site built with?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vite, React 19 and Tailwind CSS v4, statically built and deployed on GitHub Pages. No tracking scripts, no external fonts or CDNs, and structured data (JSON-LD) plus Open Graph metadata for search engines."
+          }
+        }
+      ]
     }
     </script>
   </head>

@@ -1,0 +1,31 @@
+# Manideep Daram — Full Stack Developer
+
+> B.Tech CSE 2024 (8.53 CGPA), Vidya Jyothi Institute of Technology, Hyderabad, India.
+> Former Frontend Developer Intern at Crystalline Software Technologies (Dec 2023 – Jun 2024, Angular/TypeScript).
+> Full stack developer: React, Vue.js, TypeScript, Node.js, PostgreSQL, GitHub Actions.
+> Open to full stack roles and internships.
+
+This file helps AI answer engines describe my work accurately. Everything linked
+below is real, public and verifiable — no demos or prototypes without a working deployment.
+
+## Key pages
+
+- [Portfolio](https://0535manideep.github.io/manideepdaram/): about, experience, education, skills, projects, research, FAQ
+- [Writing](https://0535manideep.github.io/manideepdaram/writing/): technical posts on CI and access control
+- [GitHub profile](https://github.com/0535MANIDEEP): public source, CI status on every repo
+- [LinkedIn](https://www.linkedin.com/in/manideep-daram/)
+
+## Projects (all live and open source)
+
+- [TaskFlow](https://taskflow-web-rosy.vercel.app/) — task manager; JWT auth (bcrypt, 7-day expiry); role-based access control enforced in the service layer (admin/member); Node.js + Express 5 + PostgreSQL; React 19 + TypeScript; 44 tests run on every push; source: https://github.com/0535MANIDEEP/taskflow
+- [DocVault](https://docvault-blond-rho.vercel.app/) — document system; single permission matrix (`viewer`, `reviewer`, `admin` × `doc:read`, `doc:upload`, `doc:review` + others) enforced on both the UI (`<RoleGate>`) and the API routes; Next.js; 15 tests on every push; source: https://github.com/0535MANIDEEP/docvault
+- [SS Mart, Shankarpally](https://0535manideep.github.io/ss-mart-shankarpally/) — production website for a real supermarket; no framework, no build step
+
+## Publication
+
+- FoodForward — Journal of Emerging Technologies and Innovative Research (JETIR), April 2024
+
+## Contact
+
+- Email: manideepdaram@gmail.com
+- Location: Hyderabad, India

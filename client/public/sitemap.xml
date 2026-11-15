@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://0535manideep.github.io/manideepdaram/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://0535manideep.github.io/manideepdaram/writing/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://0535manideep.github.io/manideepdaram/writing/two-apps-green-on-every-push/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://0535manideep.github.io/manideepdaram/writing/rbac-one-matrix-two-places/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://0535manideep.github.io/manideepdaram/</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://0535manideep.github.io/manideepdaram/writing/</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://0535manideep.github.io/manideepdaram/writing/two-apps-green-on-every-push/</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://0535manideep.github.io/manideepdaram/writing/rbac-one-matrix-two-places/</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

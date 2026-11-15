@@ -13,6 +13,7 @@ import { Projects } from './components/Projects.jsx';
 import { Research } from './components/Research.jsx';
 import { ProjectDetail } from './components/ProjectDetail.jsx';
 import { Milestones } from './components/Milestones.jsx';
+import { Faq } from './components/Faq.jsx';
 import { Contact } from './components/Contact.jsx';
 import { Footer } from './components/Footer.jsx';
 
@@ -81,6 +82,7 @@ export default function App() {
         <Projects onOpen={open} />
         <Research />
         <Milestones />
+        <Faq />
         <Contact />
       </main>
       <Footer />

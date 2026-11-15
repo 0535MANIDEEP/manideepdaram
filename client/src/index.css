@@ -296,3 +296,12 @@
     white-space: normal;
   }
 }
+
+
+/* FAQ: the plus rotates 45deg into an × when the answer is open. */
+.faq-mark {
+  transition: transform 0.2s ease;
+}
+details[open] .faq-mark {
+  transform: rotate(45deg);
+}
