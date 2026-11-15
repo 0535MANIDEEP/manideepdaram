@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#06080C" />
+<title>How I keep two apps green on every push — Manideep Daram | Full Stack Developer</title>
+<meta name="description" content="TaskFlow (44 tests) and DocVault (15 tests) both run on every push through GitHub Actions. Here is what those tests cover, the shared UI/API permissions matrix, and the one-line answer to why." />
+<link rel="canonical" href="https://0535manideep.github.io/manideepdaram/writing/two-apps-green-on-every-push/" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="How I keep two apps green on every push" />
+<meta property="og:url" content="https://0535manideep.github.io/manideepdaram/writing/two-apps-green-on-every-push/" />
+<meta property="og:image" content="https://0535manideep.github.io/manideepdaram/og.png" />
+<meta property="og:site_name" content="Manideep Daram" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Manideep Daram",
+  "url": "https://0535manideep.github.io/manideepdaram/",
+  "sameAs": [
+    "https://github.com/0535MANIDEEP",
+    "https://www.linkedin.com/in/manideep-daram/"
+  ],
+  "jobTitle": "Full Stack Developer",
+  "alumniOf": "Vidya Jyothi Institute of Technology",
+  "knowsAbout": ["React", "Vue.js", "TypeScript", "Node.js", "PostgreSQL", "Role Based Access Control"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How I keep two apps green on every push",
+  "author": { "@type": "Person", "name": "Manideep Daram" },
+  "publisher": { "@type": "Person", "name": "Manideep Daram" },
+  "datePublished": "2026-11-15",
+  "dateModified": "2026-11-15",
+  "url": "https://0535manideep.github.io/manideepdaram/writing/two-apps-green-on-every-push/",
+  "description": "TaskFlow (44 tests) and DocVault (15 tests) both run on every push through GitHub Actions. What those tests cover, the shared UI/API permissions matrix, and why it matters."
+}
+</script>
+<style>
+  body{background:#06080C;color:#e6e6e6;font:system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.65;margin:0;padding:2.5rem 1rem;max-width:48rem;margin:auto}
+  a{color:#67e8f9} h1,h2,h3{color:#fff;line-height:1.25}
+  h1{font-size:1.75rem;margin:0 0 1rem} h2{font-size:1.25rem;margin:1.75rem 0 .5rem}
+  code{background:#111827;padding:.1em .35em;border-radius:4px}
+  .note{border:1px solid #1f2937;background:#0b1016;padding:.75rem 1rem;border-radius:.5rem}
+  .meta{color:#9ca3af;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<h1>How I keep two apps green on every push</h1>
+<p class="meta">Manideep Daram, 2026-11-15 — Full Stack Developer, Hyderabad</p>
+
+<p class="note"><strong>TL;DR.</strong> TaskFlow and DocVault are not demos. TaskFlow runs 44 tests on every push to GitHub; DocVault runs 15. Same permissions matrix reads in two places: the UI and the API. Hidden buttons are fine, but they are not security — refused requests are.</p>
+
+<h2>The discipline is the same everywhere</h2>
+<p>TaskFlow: routes → services → repositories, PostgreSQL schema, JWT with bcrypt, roles enforced once in the service layer, refusal returned by the API. DocVault: a single 5-permission matrix read by &lt;RoleGate&gt; and by every route handler. Same shape. Nothing fancy. Just refusing instead of hiding.</p>
+
+<h2>What the tests actually cover</h2>
+<ul>
+<li>Permissions matrix coverage — <code>can(role, permission)</code> for the full role × permission grid, plus fail-closed behavior for an unknown role.</li>
+<li>Route-layer authorization — every protected route refuses the wrong role with a 4xx, not a silent redirect.</li>
+<li>Form validation — required fields, error states, and empty states render properly.</li>
+<li>Rendering — role-specific rendering of the same page confirmed with <code>react-dom/server</code>.</li>
+</ul>
+
+<h2>Role Based Access Control — one matrix, two places</h2>
+<p>The matrix is five permissions over three roles. <code>viewer: ['doc:read']</code>. <code>reviewer: ['doc:read','doc:review','doc:upload']</code>. <code>admin</code> gets all five. The UI (<code>&lt;RoleGate&gt;</code>) reads it to decide what to render. The API route handlers read it to decide what to allow. There is exactly one file that defines "who can do what," so permission never drifts out of sync between what the user is shown and what the server enforces.</p>
+
+<h2>Why this matters even for small projects</h2>
+<p>A reviewer or an ATS will ask: "how do you handle access control?" The answer below is much stronger than "I have login." In DocVault, a viewer literally cannot create a document, and you can watch the route refuse. In TaskFlow, a member cannot delete projects, and the service layer decides that before the API is asked. That distinction is the one that distinguishes a full stack developer from a front-end coder.</p>
+
+<p>Live apps (both completely free, no signup needed):</p>
+<ul>
+<li><a href="https://taskflow-web-rosy.vercel.app">TaskFlow — taskflow-web-rosy.vercel.app</a></li>
+<li><a href="https://docvault-blond-rho.vercel.app">DocVault — docvault-blond-rho.vercel.app</a></li>
+</ul>
+<p>Source with CI runs on every push:</p>
+<ul>
+<li><a href="https://github.com/0535MANIDEEP/taskflow">github.com/0535MANIDEEP/taskflow</a> — 44 tests</li>
+<li><a href="https://github.com/0535MANIDEEP/docvault">github.com/0535MANIDEEP/docvault</a> — 15 tests</li>
+</ul>
+
+<p><a href="/manideepdaram/">← back to portfolio</a></p>
+</body>
+</html>
